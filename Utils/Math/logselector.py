@@ -107,8 +107,8 @@ if __name__ == "__main__":
     #* It counts and verifies the bias on the selections,
     #* repeating the selection experiment a lot of times:
     #/ counter = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    n = int(input("\nNúmero de elementos: "))
-    times = int(input("Repeticiones: "))
+    n = int(input("\nNumber of elements: "))
+    times = int(input("Repetitions: "))
 
     #? Example list of 10 elements;
     #* The algorithm has to recieve this list and select randomly one element;
