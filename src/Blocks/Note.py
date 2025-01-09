@@ -7,29 +7,27 @@ class Note:
         '''
             Parameters:
             - time [int]: Base time value for the note:
-                ----------------------
-                1   Whole
-                2   Half
-                4   Quarter
-                8   Eighth
-                16  Sixteenth
-                32  Thirty-second
-                64  Sixty-fourth
-                ----------------------
-                3   Half Triplet
-                6   Quarter Triplet
-                12   Eighth Triplet
-                24   Sixteenth Triplet
-                ----------------------
+
+            Time   | Figure Name
+            -------|-------------------
+            1      | Whole
+            2      | Half
+            4      | Quarter
+            8      | Eighth
+            16     | Sixteenth
+            32     | Thirty-second
+            64     | Thirty-fourth
+            3      | Half Triplet
+            6      | Quarter Triplet
+            12     | Eighth Triplet
+            24     | Sixteenth Triplet
+
             - note [str]: The name of the note ("C", "C#" or "Db", "D", etc.)
                 If silence put "X"
             - octave [int]: Octave number (0–8)
 
             - dot [bool]: If True, add one have of the space of the note.
             - tuning [str]: Tuning frequency, either 440 (default) or 432 Hz.
-
-            Raises:
-            - ValueError: If the note or time value is invalid.
         '''
 
         #/ ATTRBIUTES:

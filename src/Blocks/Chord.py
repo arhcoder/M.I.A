@@ -1,5 +1,5 @@
 from Note import Note
-patterns = ["", "m", "7", "maj7", "m7", "mmaj7", "aug", "dim", "sus2", "sus4"]
+patterns = ["", "m", "7", "maj7", "m7", "mmaj7", "aug", "dim", "sus2", "sus4", "9", "maj9", "m9", "11", "maj11", "m11", "13", "maj13", "m13", "dim7", "m7b5", "add9", "madd9", "6", "m6", "aug7", "7b9", "7#9", "7b5", "7#5", "9#11"]
 
 class Chord:
 
@@ -13,35 +13,61 @@ class Chord:
                 ["C#", "D#", "F#", "G#", "A#"] or ["Db", "Eb", "Gb", "Ab", "Bb"]
                 "X" value represents a silent chords.
             - ctype [str]: The type of the chord. It could be:
-                - "": Empty indicates Major chord.
-                - "m": Minor chord.
-                - "7": Major chord with minor 7th.
-                - "maj7": Major chord with major 7th.
-                - "m7": Minor with minor 7th.
-                - "mmaj7": Minor with major 7t.
-                - "aug" Augmented chord.
-                - "dim": Diminished chord.
-                - "sus2": Suspended 2nd chord.
-                - "sus4": Suspended 4th chord.
+                
+                Value       | Description
+                ------------|-----------------------------------------
+                ""          | Major chord (empty string)
+                "m"         | Minor chord
+                "7"         | Dominant 7th chord
+                "maj7"      | Major 7th chord
+                "m7"        | Minor 7th chord
+                "mmaj7"     | Minor Major 7th chord
+                "aug"       | Augmented chord
+                "dim"       | Diminished chord
+                "sus2"      | Suspended 2nd chord
+                "sus4"      | Suspended 4th chord
+                "9"         | Dominant 9th chord
+                "maj9"      | Major 9th chord
+                "m9"        | Minor 9th chord
+                "11"        | Dominant 11th chord
+                "maj11"     | Major 11th chord
+                "m11"       | Minor 11th chord
+                "13"        | Dominant 13th chord
+                "maj13"     | Major 13th chord
+                "m13"       | Minor 13th chord
+                "dim7"      | Diminished 7th chord
+                "m7b5"      | Half-Diminished 7th chord (Minor 7 flat 5)
+                "add9"      | Add 9 chord
+                "madd9"     | Minor Add 9 chord
+                "6"         | Major 6th chord
+                "m6"        | Minor 6th chord
+                "aug7"      | Augmented 7th chord
+                "7b9"       | Dominant 7 flat 9 chord
+                "7#9"       | Dominant 7 sharp 9 chord
+                "7b5"       | Dominant 7 flat 5 chord
+                "7#5"       | Dominant 7 sharp 5 chord
+                "9#11"      | Dominant 9 sharp 11 chord
+
             - inversion [int] Indicates if the chord has an inversion (only between 0 and 3):
                 - If 0, it will be in fundamental state.
                 - If 1, 2 or 3, it will be applied the inversions.
             - octave [int]: Octave of the chord root (before apply an inversion).
             - time [int]: Base time value for the chord:
-                ----------------------
-                1   Whole
-                2   Half
-                4   Quarter
-                8   Eighth
-                16  Sixteenth
-                32  Thirty-second
-                64  Sixty-fourth
-                ----------------------
-                3   Half Triplet
-                6   Quarter Triplet
-                12   Eighth Triplet
-                24   Sixteenth Triplet
-                ----------------------
+
+                Time   | Figure Name
+                -------|-------------------
+                1      | Whole
+                2      | Half
+                4      | Quarter
+                8      | Eighth
+                16     | Sixteenth
+                32     | Thirty-second
+                64     | Thirty-fourth
+                3      | Half Triplet
+                6      | Quarter Triplet
+                12     | Eighth Triplet
+                24     | Sixteenth Triplet
+
         '''
 
         #/ ATTRIBUTES:
@@ -117,7 +143,28 @@ class Chord:
             "aug": [0, 4, 8],
             "dim": [0, 3, 6],
             "sus2": [0, 2, 7],
-            "sus4": [0, 5, 7]
+            "sus4": [0, 5, 7],
+            "9": [0, 4, 7, 10, 14],
+            "maj9": [0, 4, 7, 11, 14],
+            "m9": [0, 3, 7, 10, 14],
+            "11": [0, 4, 7, 10, 14, 17],
+            "maj11": [0, 4, 7, 11, 14, 17],
+            "m11": [0, 3, 7, 10, 14, 17],
+            "13": [0, 4, 7, 10, 14, 17, 21],
+            "maj13": [0, 4, 7, 11, 14, 17, 21],
+            "m13": [0, 3, 7, 10, 14, 17, 21],
+            "dim7": [0, 3, 6, 9],
+            "m7b5": [0, 3, 6, 10],
+            "add9": [0, 4, 7, 14],
+            "madd9": [0, 3, 7, 14],
+            "6": [0, 4, 7, 9],
+            "m6": [0, 3, 7, 9],
+            "aug7": [0, 4, 8, 10],
+            "7b9": [0, 4, 7, 10, 13],
+            "7#9": [0, 4, 7, 10, 15],
+            "7b5": [0, 4, 6, 10],
+            "7#5": [0, 4, 8, 10],
+            "9#11": [0, 4, 7, 10, 14, 18]
         }
 
         # Gets the root and the intervals:
