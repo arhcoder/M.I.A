@@ -62,21 +62,7 @@ class Note:
 
     #/ METHODS:
     def _update_space(self):
-        TIMES = {
-            1: ("Whole", 64),
-            2: ("Half", 32),
-            4: ("Quarter", 16),
-            8: ("Eighth", 8),
-            16: ("Sixteenth", 4),
-            32: ("Thirty-second", 2),
-            64: ("Thirty-fourth", 1),
-
-            3: ("Half Triplet", 21.33),
-            6: ("Quarter Triplet", 10.66),
-            12: ("Eighth Triplet", 5.33),
-            24: ("Sixteenth Triplet", 2.66),
-        }
-        self._name, space = TIMES[self._time]
+        self._name, space = get_Times(self._time)
         if self._dot:
             self._space = space + space / 2
         else:
@@ -184,3 +170,44 @@ class Note:
     def __repr__(self):
         return (f"Note(note={self._note}, octave={self._octave}, frequency={self._frequency} Hz, "
                 f"time={self._time}, name={self._name} dot={self._dot} space={self._space}, tuning={self._tuning} Hz)")
+
+
+def get_Times(time: int):
+    '''
+        Returns the data according to the note time.
+
+        Parameters:
+            - time [int]: The identifier of the note. Could be:
+
+                Time   | Figure Name       | Space
+                -------|----------------------------
+                1      | Whole             | 64
+                2      | Half              | 32
+                4      | Quarter           | 16
+                8      | Eighth            | 8
+                16     | Sixteenth         | 4
+                32     | Thirty-second     | 2
+                64     | Thirty-fourth     | 1
+                3      | Half Triplet      | 21.33
+                6      | Quarter Triplet   | 10.66
+                12     | Eighth Triplet    | 5.33
+                24     | Sixteenth Triplet | 2.66
+    '''
+
+    TIMES = {
+            1: ("Whole", 64),
+            2: ("Half", 32),
+            4: ("Quarter", 16),
+            8: ("Eighth", 8),
+            16: ("Sixteenth", 4),
+            32: ("Thirty-second", 2),
+            64: ("Thirty-fourth", 1),
+
+            3: ("Half Triplet", 21.33),
+            6: ("Quarter Triplet", 10.66),
+            12: ("Eighth Triplet", 5.33),
+            24: ("Sixteenth Triplet", 2.66),
+        }
+    
+    # Name, space:
+    return TIMES[time]
