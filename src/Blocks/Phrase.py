@@ -3,7 +3,7 @@ from Note import Note
 class Phrase:
 
     def __init__(self):
-        '''
+        """
             To group notes in a way of melodic phrases
 
             Attributes:
@@ -15,14 +15,14 @@ class Phrase:
                 - add_end(Note object): Add a Note() object in the end of notes list
                 - remove(index int): Remove the note of the index. If index=0, remove the first
                 - replace(index int, Note object): Replace the note of index with a new one, If index=0, replace the first
-        '''
+        """
 
         self._space = 0
         self._notes = []
         self._update_space()
     
     def _update_space(self):
-        self._space = sum(note.time for note in self._notes)
+        self._space = sum(note.space for note in self._notes)
     
 
     def add_start(self, note: Note):
@@ -90,4 +90,11 @@ class Phrase:
 
 
     def __repr__(self):
-        return f"Phrase(space={self._space}, notes={self._notes})"
+        return (
+            "\n\tPhrase(\n"
+            f"\t    space={self._space},\n"
+            f"\t    notes=[\n"
+            + ',\n'.join(['\t\t    ' + repr(note) for note in self._notes]) + '\n'
+            f"    \t\t]\n"
+            "\t)"
+        )

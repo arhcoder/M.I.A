@@ -1,10 +1,10 @@
-import pandas as pd
+
 frequencies_path = "../Data/frequencies.csv"
 
 class Note:
 
     def __init__(self, time: int, note: str, octave: int, dot: bool = False, tuning: int = 440):
-        '''
+        """
             Parameters:
             - time [int]: Base time value for the note:
 
@@ -28,7 +28,7 @@ class Note:
 
             - dot [bool]: If True, add one have of the space of the note.
             - tuning [str]: Tuning frequency, either 440 (default) or 432 Hz.
-        '''
+        """
 
         #/ ATTRBIUTES:
         #? Time identifier for the note:
@@ -62,7 +62,7 @@ class Note:
 
     #/ METHODS:
     def _update_space(self):
-        self._name, space = get_Times(self._time)
+        self._name, space = get_times(self._time)
         if self._dot:
             self._space = space + space / 2
         else:
@@ -74,13 +74,31 @@ class Note:
             self._octave = 0
         else:
             try:
-                frequencies = pd.read_csv(frequencies_path)
+                with open(frequencies_path, "r") as file:
+                    lines = file.readlines()
             except FileNotFoundError:
                 raise FileNotFoundError(f"File \"{frequencies_path}\" not found")
-            frequencies["normalized_notes"] = frequencies["note"].str.split().apply(set)
-            for _, row in frequencies.iterrows():
-                if self._note in row["normalized_notes"].union(row["note"].split()) and row["octave"] == self._octave:
-                    self._frequency = float(row[f"f{self._tuning}"])
+
+            # Parse the CSV header and rows:
+            header = lines[0].strip().split(",")
+            rows = [line.strip().split(",") for line in lines[1:]]
+
+            # Find indices of relevant columns:
+            try:
+                note_col = header.index("note")
+                octave_col = header.index("octave")
+                tuning_col = header.index(f"f{self._tuning}")
+            except ValueError as e:
+                raise ValueError(f"Required column missing in the CSV: {e}")
+
+            # Process each row:
+            for row in rows:
+                note_names = set(row[note_col].split())
+                octave = int(row[octave_col])
+                frequency = float(row[tuning_col])
+
+                if self._note in note_names and self._octave == octave:
+                    self._frequency = frequency
                     break
             else:
                 raise ValueError(f"Invalid note \"{self._note}\" or octave \"{self._octave}\"")
@@ -172,7 +190,7 @@ class Note:
                 f"time={self._time}, name={self._name} dot={self._dot} space={self._space}, tuning={self._tuning} Hz)")
 
 
-def get_Times(time: int):
+def get_times(time: int):
     '''
         Returns the data according to the note time.
 
@@ -208,6 +226,9 @@ def get_Times(time: int):
             12: ("Eighth Triplet", 5.33),
             24: ("Sixteenth Triplet", 2.66),
         }
+    
+    if time not in TIMES:
+        raise ValueError(f"Invalid time value: {time}. Must be one of {list(TIMES.keys())}.")
     
     # Name, space:
     return TIMES[time]

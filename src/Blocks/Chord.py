@@ -1,10 +1,10 @@
-from Note import Note
+from Note import Note, get_times
 patterns = ["", "m", "7", "maj7", "m7", "mmaj7", "aug", "dim", "sus2", "sus4", "9", "maj9", "m9", "11", "maj11", "m11", "13", "maj13", "m13", "dim7", "m7b5", "add9", "madd9", "6", "m6", "aug7", "7b9", "7#9", "7b5", "7#5", "9#11"]
 
 class Chord:
 
     def __init__(self, name: str, ctype: str, inversion: int, octave: int, time: int, dot: bool = False, tuning: int = 440):
-        '''
+        """
             Paremeters:
             - name [str]: Indicates the name of the chord based on the root note.
                 It could be some of this values:
@@ -68,7 +68,7 @@ class Chord:
                 12     | Eighth Triplet
                 24     | Sixteenth Triplet
 
-        '''
+        """
 
         #/ ATTRIBUTES:
         #? Chord name:
@@ -116,6 +116,7 @@ class Chord:
         #? Calculated:
         self._notes = None
         self._notes_str = None
+        self._space = 0
         self._calculate_notes()
     
 
@@ -129,6 +130,8 @@ class Chord:
             self._octave = None
             self._notes = [Note(self._time, "X", 0, self._dot, self._tuning)]
             self._notes_str = []
+            _, space = get_times(self._time)
+            self._space = space
             return
 
         #? Constants:
@@ -200,9 +203,14 @@ class Chord:
 
             # Generates also a easy lecture of the chord notes:
             notes_str.append(f'{note["note"]}{note["octave"]}')
-
+        
+        # Saves the chords lists:
         self._notes = notes_obj
         self._notes_str = notes_str
+
+        # Calculates the space:
+        _, space = get_times(self._time)
+        self._space = space
     
 
     #/ SETTERS:
@@ -304,9 +312,14 @@ class Chord:
             self._tuning = value
             self._calculate_notes()
     
+    #? SPACE:
+    @property
+    def space(self):
+        return self._space
+    
 
     def __repr__(self):
         return (
-            f"Chord(name={self._name}, ctype={self._ctype}, inversion={self._inversion}, "
-            f"octave={self._octave}, time={self._time}, dot={self._dot} notes={self._notes}, notes_str={self._notes_str})"
+            f"Chord(name={self._name}, ctype={self._ctype}, inversion={self._inversion}, octave={self._octave}, "
+            f"time={self._time}, space={self._space} dot={self._dot} notes={self._notes}, notes_str={self._notes_str})"
         )

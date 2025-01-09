@@ -2,6 +2,9 @@ from Note import Note
 from Chord import Chord
 
 
+#! TESTING NOTES AND CHORDS !#
+
+
 #/ TESTING NOTES:
 note1 = Note(4, "A", 4)
 print(note1)
