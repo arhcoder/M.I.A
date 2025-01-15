@@ -1,0 +1,37 @@
+word,category,genre,number,tonic,syllables
+alto,adjetivo,masculino,singular,1,al to
+alta,adjetivo,femenino,singular,1,al ta
+altos,adjetivo,masculino,plural,1,al tos
+altas,adjetivo,femenino,plural,1,al tas
+grande,adjetivo,masculino,singular,1,gran de
+grande,adjetivo,femenino,singular,1,gran de
+grandes,adjetivo,masculino,plural,1,gran des
+grandes,adjetivo,femenino,plural,1,gran des
+rojo,adjetivo,masculino,singular,1,ro jo
+roja,adjetivo,femenino,singular,1,ro ja
+rojos,adjetivo,masculino,plural,1,ro jos
+rojas,adjetivo,femenino,plural,1,ro jas
+bonito,adjetivo,masculino,singular,2,bo ni to
+bonita,adjetivo,femenino,singular,2,bo ni ta
+bonitos,adjetivo,masculino,plural,2,bo ni tos
+bonitas,adjetivo,femenino,plural,2,bo ni tas
+feliz,adjetivo,masculino,singular,2,fe liz
+feliz,adjetivo,femenino,singular,2,fe liz
+felices,adjetivo,masculino,plural,2,fe li ces
+felices,adjetivo,femenino,plural,2,fe li ces
+nuevo,adjetivo,masculino,singular,1,nue vo
+nueva,adjetivo,femenino,singular,1,nue va
+nuevos,adjetivo,masculino,plural,1,nue vos
+nuevas,adjetivo,femenino,plural,1,nue vas
+viejo,adjetivo,masculino,singular,1,vie jo
+vieja,adjetivo,femenino,singular,1,vie ja
+viejos,adjetivo,masculino,plural,1,vie jos
+viejas,adjetivo,femenino,plural,1,vie jas
+rápido,adjetivo,masculino,singular,1,rá pi do
+rápida,adjetivo,femenino,singular,1,rá pi da
+rápidos,adjetivo,masculino,plural,1,rá pi dos
+rápidas,adjetivo,femenino,plural,1,rá pi das
+lento,adjetivo,masculino,singular,1,len to
+lenta,adjetivo,femenino,singular,1,len ta
+lentos,adjetivo,masculino,plural,1,len tos
+lentas,adjetivo,femenino,plural,1,len tas

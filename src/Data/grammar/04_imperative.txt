@@ -1,0 +1,28 @@
+# Oración Imperativa Completa:
+S → VerboImp SujetoImplícito Objeto Circunstancial
+S → VerboImp Objeto Circunstancial
+S → VerboImp Circunstancial
+S → SujetoExplícito VerboImp Objeto Circunstancial
+S → VerboImp Objeto
+S → VerboImp
+
+# Sujeto Implícito:
+SujetoImplícito → ε
+
+# Sujeto Explícito:
+SujetoExplícito → PronPers
+SujetoExplícito → Sus Det
+
+# Verbo en Imperativo:
+VerboImp → VerImp
+
+# Objeto:
+Objeto → Det Sus Adj
+Objeto → PronRef
+Objeto → PronDem
+Objeto → PronPers
+
+# Circunstancial:
+Circunstancial → Prep Sus Adj
+Circunstancial → Prep Sus
+Circunstancial → Adv

@@ -1,0 +1,33 @@
+# Oración Interrogativa Completa:
+S → PartInterr Verbo Sujeto Objeto Circunstancial
+S → PartInterr Verbo Sujeto Objeto
+S → PartInterr Verbo Sujeto Circunstancial
+S → PartInterr Verbo Sujeto
+S → Verbo Sujeto Objeto Circunstancial PartInterr
+S → Verbo Sujeto Objeto PartInterr
+
+# Partículas Interrogativas:
+PartInterr → PronIntExc
+PartInterr → Adv
+
+# Sujeto:
+Sujeto → Det Sus Adj
+Sujeto → PronPers
+Sujeto → PronDem
+Sujeto → Sus
+
+# Verbo:
+Verbo → VerTrans
+Verbo → VerIntrans
+Verbo → VerCop
+
+# Objeto:
+Objeto → Det Sus Adj
+Objeto → PronRef
+Objeto → PronPrep
+Objeto → Sus
+
+# Circunstancial:
+Circunstancial → Prep Sus Adj
+Circunstancial → Prep Sus
+Circunstancial → Adv

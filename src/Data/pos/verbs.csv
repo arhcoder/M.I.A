@@ -1,0 +1,121 @@
+word,category,type,number,tonic,syllables
+hablar,verbo,intransitivo,neutro,2,ha blar
+comer,verbo,transitivo,neutro,2,co mer
+vivir,verbo,intransitivo,neutro,2,vi vir
+escribir,verbo,transitivo,neutro,3,es cri bir
+correr,verbo,intransitivo,neutro,2,co rrer
+ser,verbo,copulativo,neutro,1,ser
+estar,verbo,copulativo,neutro,2,es tar
+parecer,verbo,copulativo,neutro,3,pa re cer
+decir,verbo,transitivo,neutro,2,de cir
+hacer,verbo,transitivo,neutro,2,ha cer
+pensar,verbo,transitivo,neutro,2,pen sar
+ir,verbo,intransitivo,neutro,1,ir
+venir,verbo,intransitivo,neutro,2,ve nir
+salir,verbo,intransitivo,neutro,2,sa lir
+llegar,verbo,intransitivo,neutro,2,lle gar
+amar,verbo,transitivo,neutro,2,a mar
+odiar,verbo,transitivo,neutro,2,o diar
+ver,verbo,transitivo,neutro,1,ver
+escuchar,verbo,transitivo,neutro,3,es cu char
+mirar,verbo,transitivo,neutro,2,mi rar
+llamar,verbo,transitivo,neutro,2,lla mar
+comenzar,verbo,intransitivo,neutro,3,co men zar
+terminar,verbo,intransitivo,neutro,3,ter mi nar
+esperar,verbo,transitivo,neutro,3,es pe rar
+leer,verbo,transitivo,neutro,2,le er
+abrir,verbo,transitivo,neutro,2,a brir
+cerrar,verbo,transitivo,neutro,2,ce rrar
+traer,verbo,transitivo,neutro,2,tra er
+llevar,verbo,transitivo,neutro,2,lle var
+poner,verbo,transitivo,neutro,2,po ner
+quedar,verbo,intransitivo,neutro,2,que dar
+ayudar,verbo,transitivo,neutro,3,a yu dar
+trabajar,verbo,intransitivo,neutro,3,tra ba jar
+descansar,verbo,intransitivo,neutro,3,des can sar
+morir,verbo,intransitivo,neutro,2,mo rir
+vivíamos,verbo,intransitivo,plural,3,vi ví a mos
+escribían,verbo,transitivo,plural,4,es cri bí an
+corrían,verbo,intransitivo,plural,3,co rrí an
+seremos,verbo,copulativo,plural,3,se re mos
+estarán,verbo,copulativo,plural,3,es ta rán
+parecieron,verbo,copulativo,plural,4,pa re cie ron
+deciríamos,verbo,transitivo,plural,4,de ci rí a mos
+harían,verbo,transitivo,plural,3,ha rí an
+pensaron,verbo,transitivo,plural,3,pen sa ron
+iremos,verbo,intransitivo,plural,3,i re mos
+vendremos,verbo,intransitivo,plural,3,ven dre mos
+salieron,verbo,intransitivo,plural,3,sa lie ron
+llegarán,verbo,intransitivo,plural,3,lle ga rán
+amábamos,verbo,transitivo,plural,4,a má ba mos
+odiaríamos,verbo,transitivo,plural,5,o di a rí a mos
+veremos,verbo,transitivo,plural,3,ve re mos
+escucharían,verbo,transitivo,plural,4,es cu cha rí an
+mirarán,verbo,transitivo,plural,3,mi ra rán
+llamaremos,verbo,transitivo,plural,4,lla ma re mos
+comenzaremos,verbo,intransitivo,plural,5,co men za re mos
+terminaríamos,verbo,intransitivo,plural,5,ter mi na rí a mos
+esperarán,verbo,transitivo,plural,4,es pe ra rán
+leerán,verbo,transitivo,plural,3,le e rán
+abriríamos,verbo,transitivo,plural,4,a bri rí a mos
+cerrarían,verbo,transitivo,plural,4,ce rra rí an
+traeríamos,verbo,transitivo,plural,4,tra e rí a mos
+llevarían,verbo,transitivo,plural,4,lle va rí an
+pondrán,verbo,transitivo,plural,2,pon drán
+quedarán,verbo,intransitivo,plural,3,que da rán
+ayudábamos,verbo,transitivo,plural,4,a yu dá ba mos
+trabajarán,verbo,intransitivo,plural,4,tra ba ja rán
+descansarán,verbo,intransitivo,plural,4,des can sa rán
+vivirían,verbo,intransitivo,plural,4,vi vi rí an
+morirán,verbo,intransitivo,plural,3,mo ri rán
+ven,verbo,imperativo,neutro,1,ven
+haz,verbo,imperativo,neutro,1,haz
+oye,verbo,imperativo,neutro,1,o ye
+vivíamos,verbo,conjugado,plural,2,vi ví a mos
+escribían,verbo,conjugado,plural,3,es cri bí an
+corrían,verbo,conjugado,plural,2,co rrí an
+seremos,verbo,conjugado,plural,2,se re mos
+estarán,verbo,conjugado,plural,3,es ta rán
+parecieron,verbo,conjugado,plural,3,pa re cie ron
+harían,verbo,conjugado,plural,2,ha rí an
+pensaron,verbo,conjugado,plural,2,pen sa ron
+iremos,verbo,conjugado,plural,2,i re mos
+vendremos,verbo,conjugado,plural,2,ven dre mos
+salieron,verbo,conjugado,plural,2,sa lie ron
+llegarán,verbo,conjugado,plural,3,lle ga rán
+amábamos,verbo,conjugado,plural,2,a má ba mos
+odiaríamos,verbo,conjugado,plural,3,o dia rí a mos
+veremos,verbo,conjugado,plural,2,ve re mos
+escucharían,verbo,conjugado,plural,4,es cu cha rí an
+mirarán,verbo,conjugado,plural,3,mi ra rán
+llamaremos,verbo,conjugado,plural,3,lla ma re mos
+comenzaremos,verbo,conjugado,plural,4,co men za re mos
+terminaríamos,verbo,conjugado,plural,4,ter mi na rí a mos
+esperarán,verbo,conjugado,plural,4,es pe ra rán
+leerán,verbo,conjugado,plural,3,le e rán
+abriríamos,verbo,conjugado,plural,3,a bri rí a mos
+cerrarían,verbo,conjugado,plural,3,ce rra rí an
+traeríamos,verbo,conjugado,plural,3,tra e rí a mos
+llevarían,verbo,conjugado,plural,3,lle va rí an
+pondrán,verbo,conjugado,plural,2,pon drán
+quedarán,verbo,conjugado,plural,3,que da rán
+ayudábamos,verbo,conjugado,plural,3,a yu dá ba mos
+trabajarán,verbo,conjugado,plural,4,tra ba ja rán
+descansarán,verbo,conjugado,plural,4,des can sa rán
+vivirían,verbo,conjugado,plural,3,vi vi rí an
+morirán,verbo,conjugado,plural,3,mo ri rán
+hablé,verbo,conjugado,singular,2,ha blé
+comió,verbo,conjugado,singular,2,co mío
+vivió,verbo,conjugado,singular,2,vi vío
+escribí,verbo,conjugado,singular,3,es cri bí
+corrió,verbo,conjugado,singular,2,co rrío
+seré,verbo,conjugado,singular,2,se ré
+estará,verbo,conjugado,singular,3,es ta rá
+pareció,verbo,conjugado,singular,3,pa re ció
+dije,verbo,conjugado,singular,1,di je
+hizo,verbo,conjugado,singular,1,hi zo
+pensé,verbo,conjugado,singular,2,pen sé
+iré,verbo,conjugado,singular,2,i ré
+vendrá,verbo,conjugado,singular,2,ven drá
+salió,verbo,conjugado,singular,2,sa lió
+llegó,verbo,conjugado,singular,2,lle gó

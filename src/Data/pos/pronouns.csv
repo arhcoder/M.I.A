@@ -1,0 +1,59 @@
+word,category,type,genre,number,tonic,syllables
+yo,pronombre,personal,neutro,singular,1,yo
+tú,pronombre,personal,neutro,singular,1,tú
+él,pronombre,personal,masculino,singular,1,él
+ella,pronombre,personal,femenino,singular,1,e lla
+usted,pronombre,personal,neutro,singular,2,us ted
+nosotros,pronombre,personal,masculino,plural,2,no so tros
+nosotras,pronombre,personal,femenino,plural,2,no so tras
+vosotros,pronombre,personal,masculino,plural,2,vo so tros
+vosotras,pronombre,personal,femenino,plural,2,vo so tras
+ustedes,pronombre,personal,neutro,plural,2,us te des
+ellos,pronombre,personal,masculino,plural,1,e llos
+ellas,pronombre,personal,femenino,plural,1,e llas
+me,pronombre,reflexivo,neutro,singular,1,me
+te,pronombre,reflexivo,neutro,singular,1,te
+se,pronombre,reflexivo,neutro,singular,1,se
+nos,pronombre,reflexivo,neutro,plural,1,nos
+mí,pronombre,preposicional,neutro,singular,1,mí
+ti,pronombre,preposicional,neutro,singular,1,ti
+sí,pronombre,preposicional,neutro,singular,1,sí
+él,pronombre,preposicional,masculino,singular,1,él
+ella,pronombre,preposicional,femenino,singular,1,e lla
+usted,pronombre,preposicional,neutro,singular,2,us ted
+nosotros,pronombre,preposicional,masculino,plural,2,no so tros
+nosotras,pronombre,preposicional,femenino,plural,2,no so tras
+vosotros,pronombre,preposicional,masculino,plural,2,vo so tros
+vosotras,pronombre,preposicional,femenino,plural,2,vo so tras
+ellos,pronombre,preposicional,neutro,plural,1,e llos
+conmigo,pronombre,preposicional,neutro,singular,2,con mi go
+contigo,pronombre,preposicional,neutro,singular,2,con ti go
+consigo,pronombre,preposicional,neutro,singular,2,con si go
+este,pronombre,demostrativo,masculino,singular,1,es te
+esta,pronombre,demostrativo,femenino,singular,1,es ta
+estos,pronombre,demostrativo,masculino,plural,1,es tos
+estas,pronombre,demostrativo,femenino,plural,1,es tas
+ese,pronombre,demostrativo,masculino,singular,1,e se
+esa,pronombre,demostrativo,femenino,singular,1,e sa
+esos,pronombre,demostrativo,masculino,plural,1,e sos
+esas,pronombre,demostrativo,femenino,plural,1,e sas
+aquel,pronombre,demostrativo,masculino,singular,2,a quel
+aquella,pronombre,demostrativo,femenino,singular,2,a que lla
+aquellos,pronombre,demostrativo,masculino,plural,2,a que llos
+aquellas,pronombre,demostrativo,femenino,plural,2,a que llas
+qué,pronombre,interrogativo_exclamativo,neutro,singular,1,qué
+quién,pronombre,interrogativo_exclamativo,neutro,singular,1,quién
+quiénes,pronombre,interrogativo_exclamativo,neutro,plural,1,quién es
+cuál,pronombre,interrogativo_exclamativo,neutro,singular,1,cuál
+cuáles,pronombre,interrogativo_exclamativo,neutro,plural,1,cuá les
+cuánto,pronombre,interrogativo_exclamativo,masculino,singular,1,cuán to
+cuánta,pronombre,interrogativo_exclamativo,femenino,singular,1,cuán ta
+cuántos,pronombre,interrogativo_exclamativo,masculino,plural,1,cuán tos
+cuántas,pronombre,interrogativo_exclamativo,femenino,plural,1,cuán tas
+cuyo,pronombre,relativo,masculino,singular,1,cu yo
+cuya,pronombre,relativo,femenino,singular,1,cu ya
+cuyos,pronombre,relativo,masculino,plural,1,cu yos
+cuyas,pronombre,relativo,femenino,plural,1,cu yas
+que,pronombre,relativo,neutro,singular,1,que
+quien,pronombre,relativo,neutro,singular,1,quien
+quienes,pronombre,relativo,neutro,plural,1,quien es

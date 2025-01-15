@@ -1,0 +1,58 @@
+word,category,genre,number,tonic,syllables
+el,determinante,masculino,singular,1,el
+la,determinante,femenino,singular,1,la
+los,determinante,masculino,plural,1,los
+las,determinante,femenino,plural,1,las
+un,determinante,masculino,singular,1,un
+una,determinante,femenino,singular,1,u na
+unos,determinante,masculino,plural,1,u nos
+unas,determinante,femenino,plural,1,u nas
+este,determinante,masculino,singular,1,es te
+esta,determinante,femenino,singular,1,es ta
+estos,determinante,masculino,plural,1,es tos
+estas,determinante,femenino,plural,1,es tas
+ese,determinante,masculino,singular,1,e se
+esa,determinante,femenino,singular,1,e sa
+esos,determinante,masculino,plural,1,e sos
+esas,determinante,femenino,plural,1,e sas
+aquel,determinante,masculino,singular,2,a quel
+aquella,determinante,femenino,singular,2,a que lla
+aquellos,determinante,masculino,plural,2,a que llos
+aquellas,determinante,femenino,plural,2,a que llas
+mi,determinante,neutro,singular,1,mi
+mis,determinante,neutro,plural,1,mis
+tu,determinante,neutro,singular,1,tu
+tus,determinante,neutro,plural,1,tus
+su,determinante,neutro,singular,1,su
+sus,determinante,neutro,plural,1,sus
+nuestro,determinante,masculino,singular,1,nues tro
+nuestra,determinante,femenino,singular,1,nues tra
+nuestros,determinante,masculino,plural,1,nues tros
+nuestras,determinante,femenino,plural,1,nues tras
+vuestro,determinante,masculino,singular,1,vues tro
+vuestra,determinante,femenino,singular,1,vues tra
+vuestros,determinante,masculino,plural,1,vues tros
+vuestras,determinante,femenino,plural,1,vues tras
+algún,determinante,masculino,singular,2,al gún
+ningún,determinante,masculino,singular,2,nin gún
+varios,determinante,masculino,plural,1,va rios
+mucho,determinante,masculino,singular,1,mu cho
+mucha,determinante,femenino,singular,1,mu cha
+muchos,determinante,masculino,plural,1,mu chos
+muchas,determinante,femenino,plural,1,mu chas
+poco,determinante,masculino,singular,1,po co
+poca,determinante,femenino,singular,1,po ca
+pocos,determinante,masculino,plural,1,po cos
+pocas,determinante,femenino,plural,1,po cas
+todo,determinante,masculino,singular,1,to do
+toda,determinante,femenino,singular,1,to da
+todos,determinante,masculino,plural,1,to dos
+todas,determinante,femenino,plural,1,to das
+cada,determinante,neutro,singular,1,ca da
+cualquier,determinante,neutro,singular,2,cual quier
+cualquiera,determinante,neutro,singular,2,cual quie ra
+qué,determinante,neutro,singular,1,qué
+cuánto,determinante,masculino,singular,1,cuán to
+cuánta,determinante,femenino,singular,1,cuán ta
+cuántos,determinante,masculino,plural,1,cuán tos
+cuántas,determinante,femenino,plural,1,cuán tas

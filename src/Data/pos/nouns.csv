@@ -1,0 +1,25 @@
+word,category,genre,number,tonic,syllables
+perro,sustantivo,masculino,singular,1,pe rro
+perros,sustantivo,masculino,plural,1,pe rros
+niño,sustantivo,masculino,singular,1,ni ño
+niños,sustantivo,masculino,plural,1,ni ños
+niña,sustantivo,femenino,singular,1,ni ña
+niñas,sustantivo,femenino,plural,1,ni ñas
+mujer,sustantivo,femenino,singular,2,mu jer
+mujeres,sustantivo,femenino,plural,2,mu je res
+casa,sustantivo,femenino,singular,1,ca sa
+casas,sustantivo,femenino,plural,1,ca sas
+libro,sustantivo,masculino,singular,1,li bro
+libros,sustantivo,masculino,plural,1,li bros
+gato,sustantivo,masculino,singular,1,ga to
+gatos,sustantivo,masculino,plural,1,ga tos
+gata,sustantivo,femenino,singular,1,ga ta
+gatas,sustantivo,femenino,plural,1,ga tas
+árbol,sustantivo,masculino,singular,1,ár bol
+árboles,sustantivo,masculino,plural,1,ár bo les
+ciudad,sustantivo,femenino,singular,2,ciu dad
+ciudades,sustantivo,femenino,plural,2,ciu da des
+flor,sustantivo,femenino,singular,1,flor
+flores,sustantivo,femenino,plural,1,flo res
+camino,sustantivo,masculino,singular,2,ca mi no
+caminos,sustantivo,masculino,plural,2,ca mi nos

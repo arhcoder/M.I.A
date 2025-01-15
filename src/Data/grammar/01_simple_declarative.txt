@@ -1,0 +1,29 @@
+S → Sujeto Predicado
+
+# Reglas para Sujeto:
+Sujeto → Det Sus Adj
+Sujeto → PronPers
+Sujeto → PronDem
+Sujeto → Sus
+
+# Reglas para Predicado:
+Predicado → Verbo Objeto Circunstancial
+Predicado → Verbo Objeto
+Predicado → Verbo Circunstancial
+Predicado → Verbo
+
+# Reglas para Verbo:
+Verbo → VerTrans
+Verbo → VerIntrans
+Verbo → VerCop
+
+# Reglas para Objeto:
+Objeto → Det Sus Adj
+Objeto → PronRef
+Objeto → PronPrep
+Objeto → Sus
+
+# Reglas para Circunstancial:
+Circunstancial → Prep Sus Adj
+Circunstancial → Prep Sus
+Circunstancial → Adv

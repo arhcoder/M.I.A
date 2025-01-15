@@ -1,0 +1,35 @@
+# Oración Exclamativa Completa:
+S → PartExcl Verbo Sujeto Objeto Circunstancial
+S → PartExcl Sujeto Verbo Objeto Circunstancial
+S → PartExcl Sujeto Verbo Circunstancial
+S → PartExcl Verbo Sujeto
+S → Verbo Sujeto Objeto Circunstancial PartExcl
+S → Sujeto Verbo PartExcl
+S → PartExcl Objeto
+
+# Partículas Exclamativas:
+PartExcl → PronIntExc
+PartExcl → Adv
+PartExcl → Adj
+
+# Sujeto:
+Sujeto → Det Sus Adj
+Sujeto → PronPers
+Sujeto → PronDem
+Sujeto → Sus
+
+# Verbo:
+Verbo → VerTrans
+Verbo → VerIntrans
+Verbo → VerCop
+
+# Objeto:
+Objeto → Det Sus Adj
+Objeto → PronRef
+Objeto → PronPrep
+Objeto → Sus
+
+# Circunstancial:
+Circunstancial → Prep Sus Adj
+Circunstancial → Prep Sus
+Circunstancial → Adv
