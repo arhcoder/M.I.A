@@ -186,7 +186,7 @@ class Staff:
             8: ("Eighth", 8),
             16: ("Sixteenth", 4),
             32: ("Thirty-second", 2),
-            64: ("Thirty-fourth", 1),
+            64: ("Sixty-fourth", 1),
             3: ("Half Triplet", 21.33),
             6: ("Quarter Triplet", 10.66),
             12: ("Eighth Triplet", 5.33),

@@ -62,7 +62,7 @@ class Chord:
                 8      | Eighth
                 16     | Sixteenth
                 32     | Thirty-second
-                64     | Thirty-fourth
+                64     | Sixty-fourth
                 3      | Half Triplet
                 6      | Quarter Triplet
                 12     | Eighth Triplet

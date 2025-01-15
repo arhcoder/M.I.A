@@ -1,5 +1,5 @@
 
-frequencies_path = "../Data/frequencies.csv"
+frequencies_path = "../Data/frequencies/frequencies.csv"
 
 class Note:
 
@@ -16,7 +16,7 @@ class Note:
             8      | Eighth
             16     | Sixteenth
             32     | Thirty-second
-            64     | Thirty-fourth
+            64     | Sixty-fourth
             3      | Half Triplet
             6      | Quarter Triplet
             12     | Eighth Triplet
@@ -26,8 +26,8 @@ class Note:
                 If silence put "X"
             - octave [int]: Octave number (0–8)
 
-            - dot [bool]: If True, add one have of the space of the note.
-            - tuning [str]: Tuning frequency, either 440 (default) or 432 Hz.
+            - dot [bool]: If True, add one have of the space of the note
+            - tuning [str]: Tuning frequency, either 440 (default) or 432 Hz
         """
 
         #/ ATTRBIUTES:
@@ -205,7 +205,7 @@ def get_times(time: int):
                 8      | Eighth            | 8
                 16     | Sixteenth         | 4
                 32     | Thirty-second     | 2
-                64     | Thirty-fourth     | 1
+                64     | Sixty-fourth     | 1
                 3      | Half Triplet      | 21.33
                 6      | Quarter Triplet   | 10.66
                 12     | Eighth Triplet    | 5.33
@@ -219,7 +219,7 @@ def get_times(time: int):
             8: ("Eighth", 8),
             16: ("Sixteenth", 4),
             32: ("Thirty-second", 2),
-            64: ("Thirty-fourth", 1),
+            64: ("Sixty-fourth", 1),
 
             3: ("Half Triplet", 21.33),
             6: ("Quarter Triplet", 10.66),
