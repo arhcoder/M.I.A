@@ -1,4 +1,4 @@
-from nltk import CFG
+from nltk import CFG # type: ignore
 from rules import sentences_rules
 from words import complete_sentence
 import random
