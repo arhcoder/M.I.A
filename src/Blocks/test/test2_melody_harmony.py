@@ -1,9 +1,9 @@
-from Note import Note
-from Phrase import Phrase
-from Chord import Chord
+from Blocks.Note import Note
+from Blocks.Phrase import Phrase
+from Blocks.Chord import Chord
 
-from Melody import Melody
-from Harmony import Harmony
+from Blocks.Melody import Melody
+from Blocks.Harmony import Harmony
 
 
 #! TESTING MELODY AND HARMONY !#

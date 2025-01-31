@@ -1,5 +1,5 @@
 
-frequencies_path = "../Data/frequencies/frequencies.csv"
+frequencies_path = "Data/frequencies/frequencies.csv"
 
 class Note:
 

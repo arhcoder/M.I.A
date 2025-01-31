@@ -1,5 +1,5 @@
-from Note import Note
-from Chord import Chord
+from Blocks.Note import Note
+from Blocks.Chord import Chord
 
 
 #! TESTING NOTES AND CHORDS !#

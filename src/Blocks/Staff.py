@@ -1,6 +1,6 @@
-from Note import get_times
-from Phrase import Phrase
-from Chord import Chord
+from Blocks.Note import get_times
+from Blocks.Phrase import Phrase
+from Blocks.Chord import Chord
 
 class Staff:
 

@@ -1,6 +1,6 @@
-from Staff import Staff
-from Chord import Chord
-from Note import get_times
+from Blocks.Staff import Staff
+from Blocks.Chord import Chord
+from Blocks.Note import get_times
 
 class Harmony(Staff):
 

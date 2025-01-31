@@ -1,5 +1,5 @@
-from Staff import Staff
-from Phrase import Phrase
+from Blocks.Staff import Staff
+from Blocks.Phrase import Phrase
 
 class Melody(Staff):
 

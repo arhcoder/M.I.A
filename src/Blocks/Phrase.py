@@ -1,4 +1,4 @@
-from Note import Note
+from Blocks.Note import Note
 
 class Phrase:
 
