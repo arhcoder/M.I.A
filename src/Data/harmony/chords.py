@@ -32,7 +32,7 @@ patterns = {
     "9#11": [0, 4, 7, 10, 14, 18]
 }
 
-classification = {
+classifications = {
     "": "major",
     "m": "minor",
     "7": "major",

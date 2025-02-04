@@ -1,7 +1,7 @@
 
 #? CONSTANTS:
 
-from Data.harmony.chords import patterns, classification
+from Data.harmony.chords import patterns, classifications
 diatonics = {
     
     "major": ([0, 2, 4, 5, 7, 9, 11], "major"),
@@ -284,8 +284,8 @@ def degree_of_chord(root: str, ctype: str, key: str, scale: str):
     if scale not in diatonics:
         raise ValueError(f"Scale \"{scale}\" not supported.\nAvailable scales: {list(diatonics.keys())}")
     
-    if ctype not in classification:
-        raise ValueError(f"Invalid chord type: {ctype}. Supported types: {list(classification.keys())}")
+    if ctype not in classifications:
+        raise ValueError(f"Invalid chord type: {ctype}. Supported types: {list(classifications.keys())}")
 
     # Generate scale_notes:
     key_idx = note_names.index(key)
@@ -302,7 +302,7 @@ def degree_of_chord(root: str, ctype: str, key: str, scale: str):
         "diminished": "dim",
         "augmented": "aug"
     }
-    triad_category = classification[ctype]
+    triad_category = classifications[ctype]
     triad_type = triad_category_to_type.get(triad_category)
     if triad_type is None:
         raise ValueError(f"Unsupported triad category: {triad_category}")
