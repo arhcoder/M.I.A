@@ -1,7 +1,7 @@
 
 #? CONSTANTS:
 
-from Data.harmony.chords import patterns
+from Data.harmony.chords import patterns, classification
 diatonics = {
     
     "major": ([0, 2, 4, 5, 7, 9, 11], "major"),
@@ -97,7 +97,7 @@ def chords_of_scale(key: str, scale: str):
                     - "aeolian"
                     - "locrian"
         Returns:
-            - [list[tuple]] where tuple has: (name of the chord, type of the chord, grades grade)
+            - [list[tuple]] where tuple has three strings: (name of the chord, type of the chord, chord degree)
               NOTE: name of the note always with just sharps (#) no flats (b) notation
     """
     # Process key to handle capitalization and flats:
@@ -124,11 +124,11 @@ def chords_of_scale(key: str, scale: str):
     major_scale_notes = [note_names[(key_index + interval) % 12] for interval in major_scale_intervals]
     
     # Prepare Roman numerals:
-    grades = ["I", "II", "III", "IV", "V", "VI", "VII"]
+    degrees = ["I", "II", "III", "IV", "V", "VI", "VII"]
     chords = []
     
     # Mapping from pattern names to chord types:
-    # Change if can cahnge the format of chord type #
+    # Change if can change the format of chord type:
     triad_type_mapping = {
         "": "",
         "m": "m",
@@ -159,7 +159,7 @@ def chords_of_scale(key: str, scale: str):
                 chord_pattern = pattern_name
                 break
         
-        chord_type = triad_type_mapping.get(chord_pattern, "unknown")
+        chord_type = triad_type_mapping.get(chord_pattern, "x")
         
         # Compute accidental:
         major_root = major_scale_notes[i]
@@ -180,7 +180,7 @@ def chords_of_scale(key: str, scale: str):
             accidental = "#" * diff
         
         # Determine Roman numeral case and notation:
-        roman_base = grades[i]
+        roman_base = degrees[i]
         if chord_type == "minor":
             roman_case = roman_base.lower()
         else:
@@ -195,3 +195,183 @@ def chords_of_scale(key: str, scale: str):
         chords.append((root, chord_type, notation_str))
     
     return chords
+
+
+def degree_of_chord(root: str, ctype: str, key: str, scale: str):
+    """
+        Receives a chord and the key/scale and returns the degree (roman notation) on the key
+        
+        Parameters:
+            - root [str]: Name of the chord root note
+                It could be some of this values:
+                    ["C", "D", "E", "F", "G", "A", "B"]
+                    Or some of this values:
+                    ["C#", "D#", "F#", "G#", "A#"] or ["Db", "Eb", "Gb", "Ab", "Bb"]
+            - ctype [str]: The type of the chord. It could be:
+                
+                Value       | Description
+                ------------|-----------------------------------------
+                ""          | Major chord (empty string)
+                "m"         | Minor chord
+                "7"         | Dominant 7th chord
+                "maj7"      | Major 7th chord
+                "m7"        | Minor 7th chord
+                "mmaj7"     | Minor Major 7th chord
+                "aug"       | Augmented chord
+                "dim"       | Diminished chord
+                "sus2"      | Suspended 2nd chord
+                "sus4"      | Suspended 4th chord
+                "9"         | Dominant 9th chord
+                "maj9"      | Major 9th chord
+                "m9"        | Minor 9th chord
+                "11"        | Dominant 11th chord
+                "maj11"     | Major 11th chord
+                "m11"       | Minor 11th chord
+                "13"        | Dominant 13th chord
+                "maj13"     | Major 13th chord
+                "m13"       | Minor 13th chord
+                "dim7"      | Diminished 7th chord
+                "m7b5"      | Half-Diminished 7th chord (Minor 7 flat 5)
+                "add9"      | Add 9 chord
+                "madd9"     | Minor Add 9 chord
+                "6"         | Major 6th chord
+                "m6"        | Minor 6th chord
+                "aug7"      | Augmented 7th chord
+                "7b9"       | Dominant 7 flat 9 chord
+                "7#9"       | Dominant 7 sharp 9 chord
+                "7b5"       | Dominant 7 flat 5 chord
+                "7#5"       | Dominant 7 sharp 5 chord
+                "9#11"      | Dominant 9 sharp 11 chord
+            
+            - key [str]: Name of the key/scale
+                It could be some of this values:
+                ["C", "D", "E", "F", "G", "A", "B"]
+                Or some of this values:
+                ["C#", "D#", "F#", "G#", "A#"] or ["Db", "Eb", "Gb", "Ab", "Bb"]
+            - scale [str]: Name of type of scale
+                Only diatonic scales supported:
+                    - "major"
+                    - "minor"
+                    - "minor harmonic"
+                    - "minor melodic"
+                    - "ionian"
+                    - "dorian"
+                    - "phrygian"
+                    - "lydian"
+                    - "mixolydian"
+                    - "aeolian"
+                    - "locrian"
+        Returns:
+            - [str] name of the degree in roman notation; for example: I, or "iv" or "bIII"
+    """
+
+    # Validations:
+    flats_to_sharps = {"Db": "C#", "Eb": "D#", "Gb": "F#", "Ab": "G#", "Bb": "A#"}
+    root = root.capitalize()
+    key = key.capitalize()
+    ctype = ctype.lower()
+    if root in flats_to_sharps:
+        root = flats_to_sharps[root]
+    if root not in note_names:
+        raise ValueError(f"\"root\" must be any from {note_names + list(flats_to_sharps.keys())}")
+    
+    if key in flats_to_sharps:
+        key = flats_to_sharps[key]
+    if key not in note_names:
+        raise ValueError(f"\"key\" must be any from {note_names + list(flats_to_sharps.keys())}")
+    
+    scale = scale.lower()
+    if scale not in diatonics:
+        raise ValueError(f"Scale \"{scale}\" not supported.\nAvailable scales: {list(diatonics.keys())}")
+    
+    if ctype not in classification:
+        raise ValueError(f"Invalid chord type: {ctype}. Supported types: {list(classification.keys())}")
+
+    # Generate scale_notes:
+    key_idx = note_names.index(key)
+    intervals, _ = diatonics[scale]
+    scale_notes = [note_names[(key_idx + interval) % 12] for interval in intervals]
+
+    # Generate the diatonic chords for the key and scale:
+    scale_chords = chords_of_scale(key, scale)
+    
+    # Mapping from classification to triad_type:
+    triad_category_to_type = {
+        "major": "",
+        "minor": "m",
+        "diminished": "dim",
+        "augmented": "aug"
+    }
+    triad_category = classification[ctype]
+    triad_type = triad_category_to_type.get(triad_category)
+    if triad_type is None:
+        raise ValueError(f"Unsupported triad category: {triad_category}")
+    
+    # Search for a matching triad in the scale:
+    for chord_root, chord_type, degree in scale_chords:
+        if chord_root == root and chord_type == triad_type:
+            if ctype == "7":
+                suffix = "7"
+            else:
+                suffix = f" ({ctype})" if ctype not in ["", "m", "aug", "dim"] else ""
+            if triad_category == "minor":
+                degree = degree.lower()
+            return f"{degree}{suffix}"
+    
+    # Check if all notes of the chord are in the scale_notes:
+    root_idx = note_names.index(root)
+    pattern = patterns[ctype]
+    chord_notes = [note_names[(root_idx + interval) % 12] for interval in pattern]
+    all_notes_in_scale = all(note in scale_notes for note in chord_notes)
+    
+    # Compute the notation_str:
+    current_idx = note_names.index(root)
+    semitone_diff = (current_idx - key_idx) % 12
+
+    major_intervals = diatonics["major"][0]
+    degrees_list = ["I", "II", "III", "IV", "V", "VI", "VII"]
+
+    closest_i = None
+    min_distance = float("inf")
+    for i, interval in enumerate(major_intervals):
+        distance = abs(semitone_diff - interval)
+        if distance < min_distance:
+            min_distance = distance
+            closest_i = i
+        elif distance == min_distance:
+            if interval < major_intervals[closest_i]:
+                closest_i = i
+    i = closest_i
+    diff = semitone_diff - major_intervals[i]
+
+    if diff > 6:
+        diff -= 12
+    elif diff < -6:
+        diff += 12
+
+    accidental = ""
+    if diff < 0:
+        accidental = "b" * abs(diff)
+    elif diff > 0:
+        accidental = "#" * diff
+
+    roman_base = degrees_list[i]
+    if triad_category in ["minor", "diminished"]:
+        roman_case = roman_base.lower()
+    else:
+        roman_case = roman_base
+
+    if triad_category == "diminished":
+        notation_str = f"{accidental}{roman_case}°"
+        suffix = ""
+    elif triad_category == "augmented":
+        notation_str = f"{accidental}{roman_case}+"
+        suffix = ""
+    else:
+        notation_str = f"{accidental}{roman_case}"
+        suffix = f" ({ctype})" if ctype not in ["", "m"] else ""
+    
+    if all_notes_in_scale:
+        return f"{notation_str}{suffix}"
+    else:
+        return f"*{notation_str}{suffix}"

@@ -31,3 +31,37 @@ patterns = {
     "7#5": [0, 4, 8, 10],
     "9#11": [0, 4, 7, 10, 14, 18]
 }
+
+classification = {
+    "": "major",
+    "m": "minor",
+    "7": "major",
+    "maj7": "major",
+    "m7": "minor",
+    "mmaj7": "minor",
+    "aug": "augmented",
+    "dim": "diminished",
+    "sus2": "major",
+    "sus4": "major",
+    "9": "major",
+    "maj9": "major",
+    "m9": "minor",
+    "11": "major",
+    "maj11": "major",
+    "m11": "minor",
+    "13": "minor",
+    "maj13": "major",
+    "m13": "minor",
+    "dim7": "diminished",
+    "m7b5": "diminished",
+    "add9": "major",
+    "madd9": "minor",
+    "6": "major",
+    "m6": "minor",
+    "aug7": "augmented",
+    "7b9": "major",
+    "7#9": "major",
+    "7b5": "major",
+    "7#5": "augmented",
+    "9#11": "major"
+}
