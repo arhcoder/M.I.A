@@ -375,3 +375,10 @@ def degree_of_chord(root: str, ctype: str, key: str, scale: str):
         return f"{notation_str}{suffix}"
     else:
         return f"*{notation_str}{suffix}"
+
+
+def notes_of_chord(root: str, ctype: str, inversion: int):
+    pattern = patterns[ctype]
+    root_idx = note_names.index(root)
+    notes = [note_names[(root_idx + interval) % 12] for interval in pattern]
+    return notes[inversion:] + notes[:inversion]
