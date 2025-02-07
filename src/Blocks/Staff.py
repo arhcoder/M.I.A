@@ -1,6 +1,7 @@
 from Blocks.Note import get_times
 from Blocks.Phrase import Phrase
 from Blocks.Chord import Chord
+from Data.rythm.times import TIMES
 
 class Staff:
 
@@ -9,11 +10,11 @@ class Staff:
             Represents a staff bar with a specific time signature and key
             Parameters:
                 - signature [tuple]: A tuple representing the time signature (numerator, denominator)
-                    Example: [4, 4] for 4/4 time.
+                    Example: [4, 4] for 4/4 time
                 - key_name [str]: The name of the key ("C", "G#", "Bb", etc)
                 - key_type [int]: The type of the key, where 1 represents major and 0 represents minor
-                - upbeat [int]: The space occupied by the upbeat (anacrusis).
-                    Must be between 0 and the second value of the signature.
+                - upbeat [int]: The space occupied by the upbeat (anacrusis)
+                    Must be between 0 and the second value of the signature
                 - tuning [int]: The tuning frequency, either 440 or 432 Hz
         """
 
@@ -108,8 +109,9 @@ class Staff:
         if not isinstance(key_name, str):
             raise TypeError(f"\"key_name\" must be a string, but given {type(key_name).__name__}")
         
+        # TODO: CHANGE MAJOR/MINOR FOR ALL THE POSSIBLE DIATONIC SCALES:
         if key_type not in ["major", "minor"]:
-            raise ValueError(f"\"key_type\" must be 'major' or 'minor', but given {key_type}")
+            raise ValueError(f"\"key_type\" must be \"major\" or 'minor', but given {key_type}")
         
         self._key = (key_name.capitalize(), key_type)
 
@@ -179,19 +181,7 @@ class Staff:
             Returns:
                 - time [int]: The time value corresponding to the space
         """
-        TIMES = {
-            1: ("Whole", 64),
-            2: ("Half", 32),
-            4: ("Quarter", 16),
-            8: ("Eighth", 8),
-            16: ("Sixteenth", 4),
-            32: ("Thirty-second", 2),
-            64: ("Sixty-fourth", 1),
-            3: ("Half Triplet", 21.33),
-            6: ("Quarter Triplet", 10.66),
-            12: ("Eighth Triplet", 5.33),
-            24: ("Sixteenth Triplet", 2.66),
-        }
+        
         for time, (_, space) in TIMES.items():
             if abs(space - space_required) < 1e-2:
                 return time

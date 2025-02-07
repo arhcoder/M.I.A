@@ -1,8 +1,48 @@
 
 #! PARAMETERS TO MODIFY IN WAY TO SET THE ALGORITHMS RESULTS !#
 
-#? [01] CHORD PROGRESSIONS:
+
+#? [01] RYTHM PATTERNS:
+simulated_annealing_phrases_params = {
+
+    "initial_temperature": 100,
+    "cooling_rate": 0.98,
+    "iterations": 3000,
+    "selection_bias": 5,
+    "dot_probability": 0.2,
+
+    #? Set this parameters between -100 and 100 as IMPORTANCE:
+    #*
+    #*    1. A value of 0 will imply that the parameter in question will not positively or negatively
+    #*       affect the evaluation, it will be an inactive parameter
+    #*
+    #*    2. A value of -100 means that it will punish that parameter to the maximum extent, to avoid
+    #*       the characteristic of the parameter
+    #*
+    #*    3. A value of 100 means that the presence of that characteristic will be rewarded the most
+    #*
+    #? USE THE PARAMETERS IN A BALANCED WAY, NOT GOING TO extremes so as not to lose variety:
+    "correct_fitting_importance": 95,
+    "beat_on_strong_beats_reward": 95,
+    "not_beat_on_strong_beats_penalty": -85,
+    "initial_rest_duration_reward": 10,
+    "initial_rest_anacrusis_penalty": -90,
+    "final_rest_duration_reward": 60,
+    "large_last_note_reward": 60,
+
+    #? This probabilities just set between 0 and 100:
+    "probability_find_initial_rest": 20,
+    "probability_find_final_rest": 60,
+
+    #? Uniformity is the grade on which there are
+    #? repetitive use of notes figures:
+    "uniformity": 50
+}
+
+
+#? [02] CHORD PROGRESSIONS:
 genetic_progression_params = {
+
     "population_size": 50,
     "generations": 50,
     "mutation_rate": 0.1,

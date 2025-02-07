@@ -112,7 +112,6 @@ def lwrs(elements: list):
 
 """
     3: Complexity Weighted Random Selector
-
 """
 def cwrs(elements: list, complexity: float):
     """
@@ -146,3 +145,27 @@ def cwrs(elements: list, complexity: float):
     probabilities = [w / total for w in weights]
     
     return random.choices(elements, weights=probabilities, k=1)[0]
+
+
+"""
+    4: Exponential Weighted Random Selection
+"""
+def ewrs(lista, base=2):
+
+    #? Weights calcultation: 
+    wieghts = [base ** i for i in range(len(lista))]
+
+    #? Order inversion of the weights:
+    wieghts = wieghts[::-1]
+    total_weights = sum(wieghts)
+
+    #? Normalization to 1:
+    probabilities = [weight / total_weights for weight in wieghts]
+
+    #? Selection loop:
+    random_point = random.uniform(0, 1)
+    cumulative = 0
+    for i, probability in enumerate(probabilities):
+        cumulative += probability
+        if cumulative >= random_point:
+            return lista[i]

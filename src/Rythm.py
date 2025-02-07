@@ -128,13 +128,14 @@ class Rythm:
         # Generate an initial candidate solution:
         candidate = self._generate_initial_solution(num_syllables)
 
-        # Run simulated annealing.
+        # Run simulated annealing:
         best_candidate = self._simulated_annealing(candidate, syllables, total_space)
 
-        # best_candidate is a tuple: (notes, dots):
+        # Here best_candidate is a tuple: (notes, dots):
         notes, dots = best_candidate
 
-        # notes[0] is the initial rest, notes[1:-1] are the syllable notes, notes[-1] is the final rest:
+        # Here notes[0] is the initial rest, notes[1:-1] are the syllable notes,
+        # notes[-1] is the final rest:
         return notes[0], notes[1:-1], notes[-1], dots
     
 
@@ -151,16 +152,20 @@ class Rythm:
         """
 
         allowed = list(self.TIMES.keys())
-        x_param = self.params.get("selection_bias", 1)
-        dot_prob = self.params.get("dot_probability", 0.15)
+        x_param = self.params["selection_bias"]
+        dot_prob = self.params["dot_probability"]
 
         notes = []
         dots = []
 
         # Generate initial rest:
-        initial_rest = ewrs(allowed, x_param)
+        if random.random() > (self.params["probability_find_initial_rest"] / 100.0):
+            initial_rest = 0
+            dots.append(False)
+        else:
+            initial_rest = ewrs(allowed, x_param)
+            dots.append(random.random() < dot_prob)
         notes.append(initial_rest)
-        dots.append(random.random() < dot_prob)
 
         # Generate syllable notes:
         for _ in range(num_syllables):
@@ -169,9 +174,13 @@ class Rythm:
             dots.append(random.random() < dot_prob)
 
         # Generate final rest:
-        final_rest = ewrs(allowed, x_param)
+        if random.random() > (self.params["probability_find_final_rest"] / 100.0):
+            final_rest = 0
+            dots.append(False)
+        else:
+            final_rest = ewrs(allowed, x_param)
+            dots.append(random.random() < dot_prob)
         notes.append(final_rest)
-        dots.append(random.random() < dot_prob)
 
         return (notes, dots)
     
@@ -181,14 +190,15 @@ class Rythm:
             Runs the simulated annealing loop
             The candidate is represented as a tuple: (notes, dots)
         """
+
         current = candidate
         current_score = self.rate(current, syllables, total_space)
         best = copy.deepcopy(current)
         best_score = current_score
 
-        T = self.params.get("initial_temperature", 100.0)
-        cooling_rate = self.params.get("cooling_rate", 0.99)
-        iterations = self.params.get("iterations", 1000)
+        T = self.params["initial_temperature"]
+        cooling_rate = self.params["cooling_rate"]
+        iterations = self.params["iterations"]
 
         for _ in range(iterations):
             neighbor = self._neighbor(current)
@@ -214,6 +224,9 @@ class Rythm:
             both its note ID and dot flag are updated. Additionally, if the new note is a
             triplet type and there are at least two following syllable notes, the neighbor
             forces the next two syllable notes (and their dot flags) to match
+
+            Returns:
+                tuple: The neighbor candidate (notes, dots)
         """
 
         notes, dots = candidate
@@ -222,17 +235,31 @@ class Rythm:
 
         index = random.randint(0, len(new_notes) - 1)
         allowed = list(self.TIMES.keys())
-        x_param = self.params.get("selection_bias", 1)
-        new_value = ewrs(allowed, x_param)
-        dot_prob = self.params.get("dot_probability", 0.15)
+        x_param = self.params["selection_bias"]
+        dot_prob = self.params["dot_probability"]
 
-        # Update both note and dot flag at the chosen index:
-        new_notes[index] = new_value
-        new_dots[index] = (random.random() < dot_prob)
-
-        # If the changed index corresponds to a syllable note (indices 1 to len(notes)-2)
-        # and the new note is a triplet type, force the next two syllable notes (if available) to match:
-        if 1 <= index <= len(new_notes) - 2:
+        # Possible 0 value for rest:
+        if index == 0:
+            # For initial rest, check probability:
+            if random.random() > (self.params["probability_find_initial_rest"] / 100.0):
+                new_notes[index] = 0
+                new_dots[index] = False
+            else:
+                new_notes[index] = ewrs(allowed, x_param)
+                new_dots[index] = random.random() < dot_prob
+        
+        elif index == len(new_notes) - 1:
+            # For final rest, check probability:
+            if random.random() > (self.params["probability_find_final_rest"] / 100.0):
+                new_notes[index] = 0
+                new_dots[index] = False
+            else:
+                new_notes[index] = ewrs(allowed, x_param)
+                new_dots[index] = random.random() < dot_prob
+        else:
+            new_value = ewrs(allowed, x_param)
+            new_notes[index] = new_value
+            new_dots[index] = (random.random() < dot_prob)
             if new_value in self.triplet_types and (index <= len(new_notes) - 3):
                 new_notes[index + 1] = new_value
                 new_notes[index + 2] = new_value
@@ -244,78 +271,133 @@ class Rythm:
 
     def rate(self, candidate, syllables, total_space):
         """
-            Objective function to rate the candidate solution
-
-            Parameters:
-                - candidate [tuple]: (notes, dots)
-                    - notes: list[int] of length num_syllables+2
-                    - dots: list[bool] of length num_syllables (for syllable notes)
-                - syllables [list[str]]: Syllable strings corresponding to candidate notes positions 1..-2.
-                - total_space [int]: Total required space (based on bars and time signature)
-
-            The function:
-                - Penalizes the difference between the computed space and total_space
-                - For syllable notes, if dotted, half the note's duration is added:
-                    - Rewards placing stressed syllables ("*") on strong beats (adjusted by upbeat)
-                    - Penalizes candidates violating triplet constraints
-                    - Rewards longer rests (initial and final) and handles uniformity versus variety
-
-                Returns:
-                    [float]: A score (higher is better).
+        Objective function to rate the candidate solution.
+        
+        Parameters:
+            - candidate (tuple): (notes, dots)
+                - notes: list[int] of length num_syllables+2.
+                - dots: list[bool] of the same length, indicating whether each note is dotted.
+            - syllables (list[str]): Syllable strings corresponding to candidate note positions 1..-2.
+            - total_space (int): Total required space (based on bars and time signature).
+        
+        The function:
+            1. Penalizes the absolute difference between the computed space (summing the durations of all
+               notes with an extra half note duration added when dotted) and total_space. (The computed space is rounded.)
+            2. Rewards placement of stressed syllables ("*") on strong beats (accounting for the upbeat).
+            3. Rewards the initial and final rests according to their effective duration relative to the maximum (96).
+            4. Rewards (or penalizes) uniformity among the syllable notes.
+            5. Adds a punctuation bonus if the final note is large, proportional to its effective duration.
+        
+        Returns:
+            float: A score (higher is better).
         """
         notes, dots = candidate
         score = 0
 
-        #? 1. Total space calculation:
+        #? ---------------------------------------------------------------------------------
+        #? 1. Total space calculation
+        #?    For each note, add its base duration and add half the duration if dotted:
         computed_space = 0
         for idx, note in enumerate(notes):
-            duration = self.TIMES[note][1]
-            if dots[idx]:
-                duration += 0.5 * self.TIMES[note][1]
-            computed_space += duration
-        space_weight = self.params.get("space_weight", 1)
-        score -= abs(computed_space - total_space) * space_weight
+            if note == 0:
+                eff = 0
+            else:
+                eff = self.TIMES[note][1]
+                if dots[idx]:
+                    eff += 0.5 * self.TIMES[note][1]
+            computed_space += eff
+        computed_space = round(computed_space)
+        score -= abs(computed_space - total_space) * (self.params["correct_fitting_importance"] / 100.0)
 
-        #? 2. Reward stressed syllables on strong beats:
+        #? ---------------------------------------------------------------------------------
+        #? 2. Reward stressed syllables on strong beats
+        #?    Determine the effective position of each syllable note within the bar,
+        #?    taking into account the upbeat:
         base_duration = self.TIMES[self.signature[1]][1]
         upbeat_duration = self.upbeat * base_duration
         bar_space = self.signature[0] * base_duration
 
-        cum_time = self.TIMES[notes[0]][1]
-        
-        # Syllable notes are from indices 1 to len(notes)-2:
+        cumulative_time = 0
+        if notes[0] == 0:
+            cumulative_time = 0
+        else:
+            cumulative_time = self.TIMES[notes[0]][1]
+            if dots[0]:
+                cumulative_time += 0.5 * self.TIMES[notes[0]][1]
+
         for idx, syl in enumerate(syllables):
-            note_duration = self.TIMES[notes[idx + 1]][1]
-            if dots[idx + 1]:
-                note_duration += 0.5 * self.TIMES[notes[idx + 1]][1]
-            effective_position = (cum_time - upbeat_duration) % bar_space
+            note_val = notes[idx + 1]
+            if note_val == 0:
+                eff = 0
+            else:
+                eff = self.TIMES[note_val][1]
+                if dots[idx + 1]:
+                    eff += 0.5 * self.TIMES[note_val][1]
+            effective_position = (cumulative_time - upbeat_duration) % bar_space
             if "*" in syl:
                 if effective_position < 2:
-                    score += self.params.get("stress_reward", 10)
+                    score += self.params["beat_on_strong_beats_reward"] / 100.0
                 else:
-                    score -= self.params.get("stress_penalty", 5)
-            cum_time += note_duration
+                    score -= self.params["not_beat_on_strong_beats_penalty"] / 100.0
+            cumulative_time += eff
 
-        #? 3. Triplet constraints:
-        triplet_penalty = self.params.get("triplet_penalty", 20)
-        for i in range(1, len(notes) - 2):
-            if notes[i] in self.triplet_types:
-                if not (notes[i] == notes[i + 1] == notes[i + 2]):
-                    score -= triplet_penalty
+        #? ---------------------------------------------------------------------------------
+        #? 3. Initial Rest Anacrusis Penalty.
+        #?    If an upbeat is present (upbeat != 0), any effective duration in the initial,
+        #?    rest is undesirable:
+        if self.upbeat != 0:
+            if notes[0] == 0:
+                initial_eff = 0
+            else:
+                initial_eff = self.TIMES[notes[0]][1]
+                if dots[0]:
+                    initial_eff += 0.5 * self.TIMES[notes[0]][1]
+            score -= initial_eff * (self.params["initial_rest_anacrusis_penalty"] / 100.0)
 
-        #? 4. Rewards for initial and final silence:
-        rest_reward_factor = self.params.get("rest_reward", 5)
-        score += self.TIMES[notes[0]][1] * rest_reward_factor
-        score += self.TIMES[notes[-1]][1] * rest_reward_factor
+        #? ---------------------------------------------------------------------------------
+        #? 4. Rewards for initial and final rests
+        #?    Compute the effective duration of each rest (including dot bonus),
+        #?    compare with 96 (the maximum effective duration: dotted whole note),
+        #?    and add a proportional reward:
+        if notes[0] == 0:
+            initial_eff = 0
+        else:
+            initial_eff = self.TIMES[notes[0]][1]
+            if dots[0]:
+                initial_eff += 0.5 * self.TIMES[notes[0]][1]
+        
+        if self.upbeat == 0:
+            score += (initial_eff / 96.0) * self.params["initial_rest_duration_reward"]
 
-        #? 5. Uniformity vs. variety:
-        uniformity_param = self.params.get("uniformity", 50)
+        if notes[-1] == 0:
+            final_eff = 0
+        else:
+            final_eff = self.TIMES[notes[-1]][1]
+            if dots[-1]:
+                final_eff += 0.5 * self.TIMES[notes[-1]][1]
+        score += (final_eff / 96.0) * self.params["final_rest_duration_reward"]
+
+        #? ---------------------------------------------------------------------------------
+        #? 5. Uniformity bonus (or variety penalty):
+        #?    Reward successive syllable notes that are the same, penalize differences:
         uniform_bonus = 0
         for i in range(1, len(notes) - 1):
             if i < len(notes) - 2 and notes[i] == notes[i + 1]:
                 uniform_bonus += 1
             else:
                 uniform_bonus -= 1
-        score += uniform_bonus * (100 - uniformity_param) / 50
+        score += uniform_bonus * ((100 - self.params["uniformity"]) / 100.0)
+
+        #? ---------------------------------------------------------------------------------
+        #? 6. Punctuation reward for a large last note:
+        #?    Reward if the final note (the final rest) is large, based on its effective duration:
+        last_note = notes[-2]
+        if last_note == 0:
+            last_eff = 0
+        else:
+            last_eff = self.TIMES[last_note][1]
+            if dots[-2]:
+                last_eff += 0.5 * self.TIMES[last_note][1]
+        score += (last_eff / 96.0) * self.params["large_last_note_reward"]
 
         return score

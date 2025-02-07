@@ -1,3 +1,4 @@
+from Data.rythm.times import TIMES
 
 frequencies_path = "Data/frequencies/frequencies.csv"
 
@@ -191,7 +192,7 @@ class Note:
 
 
 def get_times(time: int):
-    '''
+    """
         Returns the data according to the note time.
 
         Parameters:
@@ -205,27 +206,12 @@ def get_times(time: int):
                 8      | Eighth            | 8
                 16     | Sixteenth         | 4
                 32     | Thirty-second     | 2
-                64     | Sixty-fourth     | 1
+                64     | Sixty-fourth      | 1
                 3      | Half Triplet      | 21.33
                 6      | Quarter Triplet   | 10.66
                 12     | Eighth Triplet    | 5.33
                 24     | Sixteenth Triplet | 2.66
-    '''
-
-    TIMES = {
-            1: ("Whole", 64),
-            2: ("Half", 32),
-            4: ("Quarter", 16),
-            8: ("Eighth", 8),
-            16: ("Sixteenth", 4),
-            32: ("Thirty-second", 2),
-            64: ("Sixty-fourth", 1),
-
-            3: ("Half Triplet", 21.33),
-            6: ("Quarter Triplet", 10.66),
-            12: ("Eighth Triplet", 5.33),
-            24: ("Sixteenth Triplet", 2.66),
-        }
+    """
     
     if time not in TIMES:
         raise ValueError(f"Invalid time value: {time}. Must be one of {list(TIMES.keys())}.")
