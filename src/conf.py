@@ -44,7 +44,7 @@ simulated_annealing_phrases_params = {
 genetic_progression_params = {
 
     "population_size": 50,
-    "generations": 50,
+    "generations_per_chord": 12,
     "mutation_rate": 0.1,
     "tournament_size": 5,
     "elitism_size": 3,
@@ -60,20 +60,30 @@ genetic_progression_params = {
     "chords_complexity": 20,
 
     "scoring_prefs": {
+
+        # Basic preferences:
         "first_chord_is_tonic": 4,
         "first_chord_not_tonic_penalty": 0,
         "last_chord_is_dominant": 4,
         "last_chord_not_dominant_penalty": 0,
         "first_last_combined_bonus": 10,
         "tonic_on_last_bonus": 5,
-        "dominant_precedes": 20,
+        "secondary_dominants": 10,
         "cadence": 30,
-        "scale_membership_multiplier": 20,
+        "scale_membership_multiplier": 25,
         "diversity_multiplier": 30,
         "voice_leading_multiplier": 10,
-        "sus_before_major": 4,
+        "sus_before_major": 20,
+        "sus_nonresolution_penalty": 8,
         "complexity_penalty_factor": 30,
         "dominant_seventh_bonus": 15,
-        "tension_resolution": 10
+        "tension_resolution": 10,
+        "leading_tone_resolution_bonus": 8,
+
+        # Extra cadences structures:
+        "cadence_deceptive": 10,
+        "cadence_64": 8,
+        "cadence_semicadence": 4,
+        "picardy_third_bonus": 4,
     }
 }

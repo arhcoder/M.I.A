@@ -82,7 +82,7 @@ class GeneticProgression:
         self.population = self.initialize(self.params["population_size"], chords, key, scale)
 
         #? Generaton steps: 
-        for _ in range(self.params["generations"]):
+        for _ in range(int(self.params["generations_per_chord"] * chords)):
 
             #? Evaluation of progressions:
             evaluated = [(self.rate(ind), ind) for ind in self.population]
@@ -272,13 +272,13 @@ class GeneticProgression:
         else:
             quality_scores["last_chord_is_dominant"] = (
                 scoring_prefs["last_chord_is_dominant"]
-                if "V" in cleaned_last.upper() 
+                if " ".join(re.findall("[a-zA-Z]+", cleaned_last)).upper() == "V"
                 else scoring_prefs["last_chord_not_dominant_penalty"]
             )
 
         #? 2a. Extra bonus: if first chord is tonic and last chord is dominant:
         bonus_first_last = 0
-        if (cleaned_first.upper() == "I") and ("V" in cleaned_last.upper()):
+        if (cleaned_first.upper() == "I") and (" ".join(re.findall("[a-zA-Z]+", cleaned_last)).upper() == "V"):
             bonus_first_last += scoring_prefs["first_last_combined_bonus"]
         
         #? Also bonus if the last chord is itself tonic:
@@ -286,7 +286,7 @@ class GeneticProgression:
             bonus_first_last += scoring_prefs["tonic_on_last_bonus"]
         quality_scores["first_last_bonus"] = bonus_first_last
 
-        #? 3. Reward if a chord is preceded by its respective fifth:
+        #? 3. Reward if a chord is preceded by its respective fifth (Secondary Dominants):
         dominant_precedes_score = 0.0
         for i in range(1, len(progression)):
             prev_root = progression[i - 1][0]
@@ -295,8 +295,8 @@ class GeneticProgression:
             curr_index = self.notes.index(curr_root)
             interval = (curr_index - prev_index) % 12
             if interval == 7:
-                dominant_precedes_score += scoring_prefs["dominant_precedes"]
-        quality_scores["dominant_precedes"] = dominant_precedes_score
+                dominant_precedes_score += scoring_prefs["secondary_dominants"]
+        quality_scores["secondary_dominants"] = dominant_precedes_score
 
         #? 4. Cadence structures (e.g., authentic cadence V -> I or plagal cadence IV -> I):
         cadence_score = 0.0
@@ -305,8 +305,8 @@ class GeneticProgression:
             last_degree = progression[-1][2]
             cleaned_penult = clean_degree(penult_degree)
             cleaned_last = clean_degree(last_degree)
-            if (("V" in cleaned_penult.upper() and cleaned_last.upper() == "I") or
-                ("IV" in cleaned_penult.upper() and cleaned_last.upper() == "I")):
+            if ((" ".join(re.findall("[a-zA-Z]+", cleaned_penult)).upper() == "V" and cleaned_last.upper() == "I") or
+                (" ".join(re.findall("[a-zA-Z]+", cleaned_penult)).upper() == "IV" and cleaned_last.upper() == "I")):
                 cadence_score += scoring_prefs["cadence"]
         quality_scores["cadence"] = cadence_score
 
@@ -372,16 +372,23 @@ class GeneticProgression:
         #? 9. Extra evaluation: sus chord transition.
         #? Reward if a sus2 or sus4 chord is immediately followed by a major chord (type "") with the same root:
         sus_transition_score = 0.0
+        sus_nonres_score = 0.0
         for i in range(len(progression) - 1):
             curr_chord = progression[i]
             next_chord = progression[i+1]
             curr_type = curr_chord[1]
-            # Check if current chord is sus2 or sus4 and the next chord has the same root:
+            #* Resolution: If current chord is sus2 or sus4 and the next chord has the same root:
             if curr_type in {"sus2", "sus4"} and (curr_chord[0] == next_chord[0]):
-                # And if the next chord is a major chord (type is ""):
+                # If the next chord is a major chord (type is ""):
                 if next_chord[1] == "":
                     sus_transition_score += scoring_prefs["sus_before_major"]
+            #* Non-Resolution:
+            if progression[i][1] in {"sus2", "sus4"}:
+                if not (progression[i+1][0] == progression[i][0] and progression[i+1][1] == ""):
+                    sus_nonres_score -= scoring_prefs.get("sus_nonresolution_penalty", 0)
         quality_scores["sus_transitions"] = sus_transition_score
+        quality_scores["sus_nonresolution"] = sus_nonres_score
+
 
         #? 10. Extra evaluation: dominant seventh bonus:
         #? Reward if a chord that has a dominant function (its cleaned degree contains "V") is also a 7 chord:
@@ -389,7 +396,7 @@ class GeneticProgression:
         for chord in progression:
             chord_degree = chord[2]
             cleaned = clean_degree(chord_degree)
-            if "V" in cleaned.upper() and chord[1] == "7":
+            if " ".join(re.findall("[a-zA-Z]+", cleaned)).upper() == "V" and chord[1] == "7":
                 dominant_seventh_score += scoring_prefs["dominant_seventh_bonus"]
         quality_scores["dominant_seventh"] = dominant_seventh_score
 
@@ -405,6 +412,54 @@ class GeneticProgression:
                 if next_cleaned.upper() == "I":
                     tension_score += scoring_prefs["tension_resolution"]
         quality_scores["tension_resolution"] = tension_score
+
+        #? 12. Extra evaluation: Leading Tone Resolution: (vii° -> I):
+        leading_tone_score = 0.0
+        for i in range(len(progression)-1):
+            if clean_degree(progression[i][2]).upper() == "VII" and progression[i][1] == "dim":
+                if clean_degree(progression[i+1][2]).upper() == "I":
+                    leading_tone_score += scoring_prefs.get("leading_tone_resolution_bonus", 0)
+        quality_scores["leading_tone"] = leading_tone_score
+
+
+        #? Another Cadence Patterns:
+        #* A1. Deceptive Cadence (V → vi):
+        deceptive_score = 0.0
+        if len(progression) >= 2:
+            penult_deg = clean_degree(progression[-2][2])
+            last_deg = clean_degree(progression[-1][2])
+            # Check if penultimate chord is dominant and last chord is vi (minor quality):
+            if penult_deg.upper() == "V" and last_deg.upper() == "VI" and progression[-1][1] == "m":
+                deceptive_score += scoring_prefs.get("cadence_deceptive", 0)
+        quality_scores["cadence_deceptive"] = deceptive_score
+
+        #* A2. 6/4 Cadential Chord: typically a I chord in second inversion resolving to V:
+        cadence_64_score = 0.0
+        if len(progression) >= 2:
+            penult_deg = clean_degree(progression[-2][2])
+            if penult_deg.upper() == "I" and progression[-2][3] == 2:
+                last_deg = clean_degree(progression[-1][2])
+                if last_deg.upper() == "V":
+                    cadence_64_score += scoring_prefs.get("cadence_64", 0)
+        quality_scores["cadence_64"] = cadence_64_score
+
+        #* A3. Semicadence: bonus for ending on a dominant when not preceded by a tonic:
+        semicadence_score = 0.0
+        if len(progression) >= 2:
+            penult_deg = clean_degree(progression[-2][2])
+            last_deg = clean_degree(progression[-1][2])
+            if last_deg.upper() == "V" and penult_deg.upper() != "I":
+                semicadence_score += scoring_prefs.get("cadence_semicadence", 0)
+        quality_scores["cadence_semicadence"] = semicadence_score
+
+        #* A4. Picardy Third: in minor keys, if the final chord is tonic (I) but in major (not minor), award bonus:
+        picardy_score = 0.0
+        if self.scale in {"minor", "minor harmonic", "minor melodic", "aeolian"}:
+            last_deg = clean_degree(progression[-1][2])
+            if last_deg.upper() == "I" and progression[-1][1] != "m":
+                picardy_score += scoring_prefs.get("picardy_third_bonus", 0)
+        quality_scores["picardy_third"] = picardy_score
+
         
         #? Gets the total score:
         total_score = sum(quality_scores.values())

@@ -7,7 +7,7 @@ from Progressions import GeneticProgression
 key = "C"
 scale = "major"
 progressions = GeneticProgression()
-best_progression = progressions.create(8, key, scale)
+best_progression = progressions.create(6, key, scale)
 population = progressions.all()
 
 print(f"GENETIC ALGORITHM PROGRESSIONS\nIn key of {key} {scale}:")
