@@ -1,4 +1,4 @@
-from Grammar import Grammar
+from NLP.Grammar import Grammar
 
 #? FOR EACH KIND OF SENTENCE:
 for sentence_type in [1, 2, 3, 4]:

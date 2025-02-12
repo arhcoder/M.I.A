@@ -1,7 +1,7 @@
 from nltk import CFG # type: ignore
-from rules import sentences_rules
-from words import complete_sentence
 import random
+from NLP.rules import sentences_rules
+from NLP.words import complete_sentence
 
 class Grammar:
 

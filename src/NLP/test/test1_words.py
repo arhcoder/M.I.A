@@ -1,4 +1,4 @@
-from words import complete_sentence
+from NLP.words import complete_sentence
 
 categories = "Det Sus Adj VConj Det Sus"
 oracion = complete_sentence(categories)

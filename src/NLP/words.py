@@ -2,7 +2,7 @@ import pandas as pd
 import random
 import os
 
-base_path = "../Data/pos/"
+base_path = "Data/pos/"
 
 def complete_sentence(categories_string):
     """
