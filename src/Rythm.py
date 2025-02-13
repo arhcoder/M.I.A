@@ -1,14 +1,16 @@
 import random
 import math
 import copy
+
+from Blocks.Note import Note
+from Blocks.Phrase import Phrase
 from Data.rythm.times import TIMES
 from Selectors import ewrs
-from conf import simulated_annealing_phrases_params
 
 
 class Rythm:
 
-    def __init__(self, signature, upbeat):
+    def __init__(self, signature: tuple, upbeat: int, params: dict, for_chords: bool = False):
         """
 
             This class allows to create an object that fits sentences (divided by syllables),
@@ -17,22 +19,146 @@ class Rythm:
             Parameters:
                 - signature [tuple]: Time signature on the phrase. For example: (4, 4)
                 - upbeat: [int]: Space occupied by the upbeat (anacrusis)
+
+                - params [dict]: Dictionary containing the configuration parameters for the Simulated Annealing
+                  algorithm and the fitting rules. The name of the variables are the name of the key:
+
+                    Simulated Annealing Configuration:
+                    -----------------------------------
+                    - "initial_temperature" [float]:
+                        Starting temperature for the annealing process
+                        Higher values allow greater exploration of the solution space
+                    
+                    - "cooling_rate" [float]:
+                        Rate at which the temperature decreases. 
+                        Should be between 0 and 1. A value closer to 1 slows down cooling, allowing more exploration
+                    
+                    - "iterations" [int]:
+                        Number of iterations to perform at each temperature level
+                    
+                    - "selection_bias" [int]:
+                        Bias of selecting large notes over small notes (BASED ON THE ORDER OF NOTES)
+                        THIS BIAS GET MORE WEIGTH OF SELECTION ACCORDING TO THE ORDER INTO "TIMES" of Data.rythm.times:
+                        DEFAULT PREFERENCE TOP:
+                        - "Whole"
+                        - "Half"
+                        - "Quarter"
+                        - "Eighth"
+
+                        - "Sixteenth"
+
+                        - "Quarter Triplet"
+                        - "Half Triplet"
+                        - "Eighth Triplet"
+
+                        - "Thirty-second"
+                        
+                        - "Sixteenth Triplet"
+                        - "Sixty-fourth"
+
+                        THIS BIAS PPARAMETER is int between 1 and 10
+                            - 1: The bias between based on the order (Preference among the firsts towards the latests) is low
+                            - 5: The bias between based on the order (Preference among the firsts towards the latests) is high
+                            - 10: The bias between based on the order (Preference among the firsts towards the latests) is the highest
+                    
+                    - "dot_probability" [float]:
+                        Probability of assigning a dotted rhythm to a note
+                        Should be between 0 and 1
+
+                    Importance Weights:
+                    -------------------
+                    These parameters determine the importance of each characteristic when evaluating a solution
+                    They must be set between -100 and 100, following these guidelines:
+                        - 0: The parameter is inactive and does not affect the evaluation
+                        - -100: Maximally penalizes the characteristic, discouraging its presence
+                        - 100: Maximally rewards the characteristic, encouraging its presence
+                    
+                    - "correct_fitting_importance" [int]:
+                        Importance of fitting the syllables' durations exactly to the expected size
+                    
+                    - "beat_on_strong_beats_reward" [int]:
+                        Reward for aligning syllables with strong beats (e.g., downbeats)
+                    
+                    - "not_beat_on_strong_beats_penalty" [int]:
+                        Penalty for not aligning syllables with strong beats
+                    
+                    - "initial_rest_duration_reward" [int]:
+                        Reward for having an initial rest before the first syllable
+                    
+                    - "initial_rest_anacrusis_penalty" [int]:
+                        Penalty for an initial rest that creates an anacrusis (upbeat)
+                    
+                    - "final_rest_duration_reward" [int]:
+                        Reward for ending with a rest, enhancing the cadence
+                    
+                    - "large_last_note_reward" [int]:
+                        Reward for using a long duration for the last syllable (e.g., to emphasize the end)
+
+                    Probabilities:
+                    --------------
+                    These probabilities control certain rhythmic choices and must be set between 0 and 100:
+
+                    - "probability_find_initial_rest" [int]:
+                        Probability of introducing an initial rest before the first syllable
+                    
+                    - "probability_find_final_rest" [int]:
+                        Probability of adding a rest at the end of the phrase
+                    
+                    Uniformity:
+                    -----------
+                    - "uniformity" [int]:
+                        Controls the repetitiveness of note durations
+                            - 0: Maximum variety in note durations
+                            - 100: Maximum uniformity, with repetitive note durations
+                
+                - for_chords [bool]: If true, do the logic of find the durations, but for chords. This logic
+                  is too much easier and use basic parameters
+
+                  FOR CHORDS RECOMENDATION WHILE USING METHOD "fit":
+                    1. "sentence" should be a list of strings "X" for wich each "X"
+                        is the amount of chords for each phrase. For example, if
+                        there are 4 phrases, and 6 chords, and the distribution is:
+                            - Phrase 1: 2 chords
+                            - Phrase 2: 1 chord
+                            - Phrase 3: 2 chords
+                            - Phrase 4: 1 chord
+                        And each phrase size is "4 bars", in order to get the
+                        durations of each chord for the 6 chords progression,
+                        then execute this method 4 times (1 for each phrase),
+                        and, in each one pass as "sentences" a list of "X" based
+                        on the amount of chords for each phrase
+                    2. "bars" has to be the same length of "bars" used on each phrase
         """
         self.signature = signature
         self.upbeat = upbeat
-        self.params = simulated_annealing_phrases_params
+        self.params = params
         self.TIMES = TIMES
         self.triplet_types = {3, 6, 12, 24}
+        self.for_chords = for_chords
+
+        # If it is for chords, some params are simplier:
+        if for_chords:
+            self.params["selection_bias"] = 5
+            self.params["correct_fitting_importance"] = 100
+            self.params["beat_on_strong_beats_reward"] = 100
+            self.params["not_beat_on_strong_beats_penalty"] = -100
+            self.params["initial_rest_duration_reward"] = -100
+            self.params["initial_rest_anacrusis_penalty"] = -100
+            self.params["final_rest_duration_reward"] = -100
+            self.params["large_last_note_reward"] = 0
+            self.params["probability_find_initial_rest"] = 0
+            self.params["probability_find_final_rest"] = 0
+            self.params["uniformity"] = 80
     
 
-    def preprocess_syllables(self, sentence):
+    def preprocess_syllables(self, sentence: list):
         """
         Preprocess the sentence to apply synalepha. In this context the sentence is a list of tokens,
         where " " indicates a word boundary. Synalepha is applied as follows:
         
             - For each word (a sequence of tokens separated by " "), check whether the last character
               (ignoring the stress marker "*") of the last syllable of the previous word is a vowel and
-              the first character of the first syllable of the current word is also a vowel.
+              the first character of the first syllable of the current word is also a vowel
             - If so, merge these two syllables. If either syllable was stressed (contains "*"),
               ensure the merged syllable is marked as stressed
         
@@ -78,7 +204,7 @@ class Rythm:
         return processed_syllables
     
 
-    def fit(self, sentence, bars):
+    def fit(self, sentence: list, bars: int):
         """
             Fits a sentence into an amount of bars using Simulated Annealing
 
@@ -89,12 +215,18 @@ class Rythm:
                 - bars [int]: Amount of bars in which the sentence must be fitted
 
             Returns:
-                [tuple]: (initial_rest, syllable_figures, final_rest)
-                    - initial_rest [int]: Figure time id number of the silence before the phrase
-                    - syllable_figures [list]: Note IDs (integers) assigned to each syllable (non-space)
-                    - final_rest [int]: Figure id number of the silence after the phrase
-                    - dots [list[bool]]: For each syllable, True if the note is dotted, else False
-                        (The first and last entries correspond to the rests.)
+
+                IF Rythm.for_chords is TRUE:
+                    - [Phrase]: Object Phrase, built by a grupo of Objects [Note] in which each note
+                      has the setted time duration and a default note A of octave 4.
+                
+                IF Rythm.for_chords is FALSE:
+                    - [tuple]: (initial_rest, syllable_figures, final_rest, dots)
+                        - initial_rest [int]: Figure time id number of the silence before the phrase
+                        - syllable_figures [list]: Note IDs (integers) assigned to each syllable (non-space)
+                        - final_rest [int]: Figure id number of the silence after the phrase
+                        - dots [list[bool]]: For each syllable, True if the note is dotted, else False
+                            (The first and last entries correspond to the rests)
                 
                     NOTE: FOR FIGURE TIME ID NUMBERS:
 
@@ -112,6 +244,7 @@ class Rythm:
                     12     | Eighth Triplet
                     24     | Sixteenth Triplet
         """
+
         # Preprocess sentence (apply synalepha):
         syllables = self.preprocess_syllables(sentence)
         num_syllables = len(syllables)
@@ -134,12 +267,39 @@ class Rythm:
         # Here best_candidate is a tuple: (notes, dots):
         notes, dots = best_candidate
 
-        # Here notes[0] is the initial rest, notes[1:-1] are the syllable notes,
-        # notes[-1] is the final rest:
-        return notes[0], notes[1:-1], notes[-1], dots
+        
+        #/ If for chords return as simple list of strings:
+        if self.for_chords:
+
+            # Here notes[0] is the initial rest, notes[1:-1] are the syllable notes, notes[-1] is the final rest:
+            return (notes[0], notes[1:-1], notes[-1], dots)
+
+        #/ If not for chords returns as Phrase clase:
+        else:
+            phrase = Phrase()
+
+            # Process the initial rest (index 0);
+            # Use "X" in octave 0:
+            if notes[0] != 0:
+                note_obj = Note(time=notes[0], note="X", octave=0, dot=dots[0])
+                phrase.add_end(note_obj)
+            
+            # Process the syllable notes (indices 1 to len(notes)-2)
+            # Use "A" in octave 4 as default (because is just rythmic, not melodic yet):
+            for idx in range(1, len(notes) - 1):
+                note_obj = Note(time=notes[idx], note="A", octave=4, dot=dots[idx])
+                phrase.add_end(note_obj)
+            
+            # Process the final rest (last index);
+            # For rests, use "X" in octave 0:
+            if notes[-1] != 0:
+                note_obj = Note(time=notes[-1], note="X", octave=0, dot=dots[-1])
+                phrase.add_end(note_obj)
+            
+            return phrase
     
 
-    def _generate_initial_solution(self, num_syllables):
+    def _generate_initial_solution(self, num_syllables: int):
         """
             Generates an initial candidate solution
 
@@ -185,7 +345,7 @@ class Rythm:
         return (notes, dots)
     
 
-    def _simulated_annealing(self, candidate, syllables, total_space):
+    def _simulated_annealing(self, candidate: tuple, syllables: list, total_space: int):
         """
             Runs the simulated annealing loop
             The candidate is represented as a tuple: (notes, dots)
@@ -214,7 +374,7 @@ class Rythm:
         return best
     
 
-    def _neighbor(self, candidate):
+    def _neighbor(self, candidate: tuple):
         """
             Returns a neighboring candidate solution by randomly changing one element
             Candidate is a tuple (notes, dots)
@@ -269,27 +429,27 @@ class Rythm:
         return (new_notes, new_dots)
     
 
-    def rate(self, candidate, syllables, total_space):
+    def rate(self, candidate: tuple, syllables: list, total_space: int):
         """
-        Objective function to rate the candidate solution.
+        Objective function to rate the candidate solution
         
         Parameters:
             - candidate (tuple): (notes, dots)
-                - notes: list[int] of length num_syllables+2.
-                - dots: list[bool] of the same length, indicating whether each note is dotted.
-            - syllables (list[str]): Syllable strings corresponding to candidate note positions 1..-2.
-            - total_space (int): Total required space (based on bars and time signature).
+                - notes: list[int] of length num_syllables+2
+                - dots: list[bool] of the same length, indicating whether each note is dotted
+            - syllables (list[str]): Syllable strings corresponding to candidate note positions 1..-2
+            - "total_space" [int]: Total required space (based on bars and time signature)
         
         The function:
             1. Penalizes the absolute difference between the computed space (summing the durations of all
                notes with an extra half note duration added when dotted) and total_space. (The computed space is rounded.)
-            2. Rewards placement of stressed syllables ("*") on strong beats (accounting for the upbeat).
-            3. Rewards the initial and final rests according to their effective duration relative to the maximum (96).
-            4. Rewards (or penalizes) uniformity among the syllable notes.
-            5. Adds a punctuation bonus if the final note is large, proportional to its effective duration.
+            2. Rewards placement of stressed syllables ("*") on strong beats (accounting for the upbeat)
+            3. Rewards the initial and final rests according to their effective duration relative to the maximum (96)
+            4. Rewards (or penalizes) uniformity among the syllable notes
+            5. Adds a punctuation bonus if the final note is large, proportional to its effective duration
         
         Returns:
-            float: A score (higher is better).
+            float: A score (higher is better)
         """
         notes, dots = candidate
         score = 0
@@ -338,11 +498,11 @@ class Rythm:
                 if effective_position < 2:
                     score += self.params["beat_on_strong_beats_reward"] / 100.0
                 else:
-                    score -= self.params["not_beat_on_strong_beats_penalty"] / 100.0
+                    score += self.params["not_beat_on_strong_beats_penalty"] / 100.0
             cumulative_time += eff
 
         #? ---------------------------------------------------------------------------------
-        #? 3. Initial Rest Anacrusis Penalty.
+        #? 3. Initial Rest Anacrusis Penalty
         #?    If an upbeat is present (upbeat != 0), any effective duration in the initial,
         #?    rest is undesirable:
         if self.upbeat != 0:
@@ -352,7 +512,7 @@ class Rythm:
                 initial_eff = self.TIMES[notes[0]][1]
                 if dots[0]:
                     initial_eff += 0.5 * self.TIMES[notes[0]][1]
-            score -= initial_eff * (self.params["initial_rest_anacrusis_penalty"] / 100.0)
+            score += initial_eff * (self.params["initial_rest_anacrusis_penalty"] / 100.0)
 
         #? ---------------------------------------------------------------------------------
         #? 4. Rewards for initial and final rests

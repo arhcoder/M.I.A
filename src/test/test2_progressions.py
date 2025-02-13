@@ -3,10 +3,11 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from Progressions import GeneticProgression
+from conf import genetic_progression_params
 
 key = "C"
 scale = "major"
-progressions = GeneticProgression()
+progressions = GeneticProgression(genetic_progression_params)
 best_progression = progressions.create(6, key, scale)
 population = progressions.all()
 

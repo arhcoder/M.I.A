@@ -22,11 +22,11 @@ simulated_annealing_phrases_params = {
     #*    3. A value of 100 means that the presence of that characteristic will be rewarded the most
     #*
     #? USE THE PARAMETERS IN A BALANCED WAY, NOT GOING TO extremes so as not to lose variety:
-    "correct_fitting_importance": 95,
-    "beat_on_strong_beats_reward": 95,
-    "not_beat_on_strong_beats_penalty": -85,
+    "correct_fitting_importance": 98,
+    "beat_on_strong_beats_reward": 90,
+    "not_beat_on_strong_beats_penalty": -70,
     "initial_rest_duration_reward": 10,
-    "initial_rest_anacrusis_penalty": -90,
+    "initial_rest_anacrusis_penalty": -100,
     "final_rest_duration_reward": 60,
     "large_last_note_reward": 60,
 

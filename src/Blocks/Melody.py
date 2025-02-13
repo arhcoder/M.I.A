@@ -3,16 +3,16 @@ from Blocks.Phrase import Phrase
 
 class Melody(Staff):
 
-    def __init__(self, signature: tuple, key_name: str, key_type=1, upbeat=0, tuning=440):
+    def __init__(self, signature: tuple, key_name: str, key_type, upbeat=0, tuning=440):
         """
             Represents a melody staff containing a list of Phrase objects
             Inherits from Staff
             Parameters:
-                - signature [tupe]: Time signature
+                - signature [tuple]: Time signature
                 - key_name [str]: Name of the key
-                - key_type [int]: 1 for major, 0 for minor
-                - upbeat [int]: Space occupied by the upbeat
-                - tuning [int]: Tuning frequency
+                - key_type [str]: Name of the type of scale; Example: "major", "minor", "lydian", minor melodic"
+                - upbeat [int]: Times occupied by the upbeat; Default: 0 (no upbeat)
+                - tuning [int]: Tuning frequency; Default: 440 (A4=440Hz)
         """
         super().__init__(signature, key_name, key_type, upbeat, tuning)
     
@@ -23,7 +23,7 @@ class Melody(Staff):
             - phrase [Phrase]: The Phrase object to add
         """
         if not isinstance(phrase, Phrase):
-            raise TypeError("Element must be an instance of Phrase.")
+            raise TypeError("Element must be an instance of Phrase")
         
         self._content.append(phrase)
         self._update_space()

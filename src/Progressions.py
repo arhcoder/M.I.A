@@ -2,15 +2,119 @@ import random, re
 from Key import chords_of_scale, degree_of_chord, notes_of_scale, notes_of_chord, diatonics
 from Selectors import lwrs, cwrs
 from Data.harmony.chords import patterns, classifications
-from conf import genetic_progression_params
 
 
 class GeneticProgression:
 
-    def __init__(self):
+    def __init__(self, params: dict):
+        """
+            Class to construct Chord Progressions with Genetic Algorithm
+            [CHECK THE FILE "conf.py" TO SEE THE DEFAULT CONFIGURATIONS OF params DICT]
+
+            Parameters:
+                - params [dict]: Dictionary containing the configuration parameters for the Genetic
+                  Algorithm and chord progression rules. The varaible names are the keys of dictionary
+
+                    Genetic Algorithm Configuration:
+                    ---------------------------------
+                    - "population_size" [int]:
+                        Number of chord progressions in each generation 
+                    
+                    - "generations_per_chord" [int]:
+                        Number of generations to evolve for each chord in the progression
+                    
+                    - "mutation_rate" [float]:
+                        Probability of mutation in the genetic algorithm 
+                        A value near 1 (100%) increases the likelihood of rare chords but may result in unstable progressions
+                    
+                    - "tournament_size" [int]:
+                        Number of candidates participating in the selection tournament 
+                        Higher values increase selective pressure
+                    
+                    - "elitism_size" [int]:
+                        Number of top-performing chord progressions carried over to the next generation
+                    
+                    Chord Complexity:
+                    -----------------
+                    - "chords_complexity" [int]:
+                        Determines how complex the chords will be in the progression:
+                            - 0: Uses only basic major and minor chords (and occasionally diminished)
+                            - 100: Uses complex chords frequently (e.g., maj11, m7b5, 7#5)
+                            - Values above 50 lean towards jazzier chords
+                        Should be between 0 and 100
+
+                    Scoring Preferences:
+                    --------------------
+                    This section controls how the fitness of a chord progression is calculated. Each value represents a weight or penalty for the corresponding rule:
+
+                    - "first_chord_is_tonic" [int (AMOUNT OF POINTS)]:
+                        Bonus if the first chord is the tonic (I) chord
+
+                    - "first_chord_not_tonic_penalty" [int (AMOUNT OF POINTS)]:
+                        Penalty if the first chord is not the tonic
+                    
+                    - "last_chord_is_dominant" [int (AMOUNT OF POINTS)]:
+                        Bonus if the last chord is a dominant (V) chord
+                    
+                    - "last_chord_not_dominant_penalty" [int (AMOUNT OF POINTS)]:
+                        Penalty if the last chord is not dominant
+                    
+                    - "first_last_combined_bonus" [int (AMOUNT OF POINTS)]:
+                        Bonus for having a tonic as the first chord and a dominant as the last chord
+                    
+                    - "tonic_on_last_bonus" [int (AMOUNT OF POINTS)]:
+                        Bonus if the last chord is the tonic, ensuring resolution
+                    
+                    - "secondary_dominants" [int (AMOUNT OF POINTS)]:
+                        Bonus for using secondary dominants to add harmonic interest
+                    
+                    - "cadence" [int (AMOUNT OF POINTS)]:
+                        Bonus for creating standard cadences (e.g., V-I, IV-I)
+                    
+                    - "scale_membership_multiplier" [int (AMOUNT OF POINTS)]:
+                        Multiplier for chords that belong to the key's scale
+                    
+                    - "diversity_multiplier" [int (AMOUNT OF POINTS)]:
+                        Multiplier for harmonic diversity within the progression
+                    
+                    - "voice_leading_multiplier" [int (AMOUNT OF POINTS)]:
+                        Multiplier for smooth voice leading between chords
+                    
+                    - "sus_before_major" [int (AMOUNT OF POINTS)]:
+                        Bonus for using suspended chords before resolving to major chords
+                    
+                    - "sus_nonresolution_penalty" [int (AMOUNT OF POINTS)]:
+                        Penalty for using suspended chords without resolving them
+                    
+                    - "complexity_penalty_factor" [int (AMOUNT OF POINTS)]:
+                        Penalty for overly complex chords if chords_complexity is low
+                    
+                    - "dominant_seventh_bonus" [int (AMOUNT OF POINTS)]:
+                        Bonus for using dominant seventh chords, enhancing harmonic tension
+                    
+                    - "tension_resolution" [int (AMOUNT OF POINTS)]:
+                        Bonus for resolving harmonic tension effectively
+                    
+                    - "leading_tone_resolution_bonus" [int (AMOUNT OF POINTS)]:
+                        Bonus for resolving leading tones to the tonic
+                    
+                    Extra Cadences:
+                    ---------------
+                    - "cadence_deceptive" [int (AMOUNT OF POINTS)]:
+                        Bonus for using deceptive cadences (e.g., V-vi)
+                    
+                    - "cadence_64" [int (AMOUNT OF POINTS)]:
+                        Bonus for using cadential 6/4 chords before resolving
+                    
+                    - "cadence_semicadence" [int (AMOUNT OF POINTS)]:
+                        Bonus for using semicadences (e.g., ending on V)
+                    
+                    - "picardy_third_bonus" [int (AMOUNT OF POINTS)]:
+                        Bonus for using a Picardy third (ending on a major tonic in a minor key)
+        """
 
         # Load GA parameters from config file:
-        self.params = genetic_progression_params
+        self.params = params
         self.notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
         self.population = []
         self.key = None
@@ -81,7 +185,7 @@ class GeneticProgression:
         #? Initializate population:
         self.population = self.initialize(self.params["population_size"], chords, key, scale)
 
-        #? Generaton steps: 
+        #? Generaton steps:
         for _ in range(int(self.params["generations_per_chord"] * chords)):
 
             #? Evaluation of progressions:
@@ -102,7 +206,12 @@ class GeneticProgression:
             self.population = elite + children[:self.params["population_size"] - self.params["elitism_size"]]
         
         
-        # Returns just the best individual:
+        #/ Returns just the best individual:
+        #? Returns as list[tuple] in which each tuple has:
+        #*  - [str] Name of root note on the chord
+        #*  - [str] Type of the chord
+        #*  - [str] Degree of the chord on the key
+        #*  - [int] Inversion (if 0, it is fundamental state)
         return max(self.population, key=lambda x: self.rate(x))
     
 
@@ -327,7 +436,7 @@ class GeneticProgression:
             chord_id = (chord[0], chord[1], clean_degree(chord[2]), chord[3])
             chord_ids.append(chord_id)
         unique_count = len(set(chord_ids))
-        diversity_ratio = unique_count / len(progression)  # 1 means all chords are unique.
+        diversity_ratio = unique_count / len(progression)  # 1 means all chords are unique
         quality_scores["diversity"] = diversity_ratio * scoring_prefs["diversity_multiplier"]
 
         #? 7. Voice leading: evaluate smoothness (lower average movement in semitones is better):
@@ -369,7 +478,7 @@ class GeneticProgression:
                     complexity_score += reward * scoring_prefs["complexity_penalty_factor"]
         quality_scores["complexity"] = complexity_score
 
-        #? 9. Extra evaluation: sus chord transition.
+        #? 9. Extra evaluation: sus chord transition
         #? Reward if a sus2 or sus4 chord is immediately followed by a major chord (type "") with the same root:
         sus_transition_score = 0.0
         sus_nonres_score = 0.0

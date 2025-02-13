@@ -2,17 +2,18 @@ from Blocks.Note import get_times
 from Blocks.Phrase import Phrase
 from Blocks.Chord import Chord
 from Data.rythm.times import TIMES
+from Key import diatonics
 
 class Staff:
 
-    def __init__(self, signature: tuple, key_name: str, key_type=1, upbeat=0, tuning=440):
+    def __init__(self, signature: tuple, key_name: str, key_type: str, upbeat=0, tuning=440):
         """
             Represents a staff bar with a specific time signature and key
             Parameters:
                 - signature [tuple]: A tuple representing the time signature (numerator, denominator)
                     Example: [4, 4] for 4/4 time
                 - key_name [str]: The name of the key ("C", "G#", "Bb", etc)
-                - key_type [int]: The type of the key, where 1 represents major and 0 represents minor
+                - key_type [str]: Name of the type of scale; Example: "major", "minor", "lydian", minor melodic"
                 - upbeat [int]: The space occupied by the upbeat (anacrusis)
                     Must be between 0 and the second value of the signature
                 - tuning [int]: The tuning frequency, either 440 or 432 Hz
@@ -43,9 +44,10 @@ class Staff:
         if key_name not in naturals + sharps + flats:
             raise ValueError(f"\"key_name\" must be one of {naturals + sharps + flats}, but given {key_name}")
 
-        if key_type not in [0, 1]:
-            raise ValueError(f"\"key_type\" must be 1 for major or 0 for minor, but given {key_type}")
-        self._key = (key_name, "major" if key_type == 1 else "minor")
+        key_type = key_type.lower()
+        if not key_type in diatonics.keys():
+            raise ValueError(f"\"key_type\" must be any from {list(diatonics.keys())} but given {key_type}")
+        self._key = (key_name, key_type)
 
         #? Tuning:
         if tuning not in [440, 432]:
